@@ -1,0 +1,2705 @@
+{
+  "title": "Emdoor & Verifone Software Project Sync (导入存档)",
+  "date": "",
+  "participants": 0,
+  "videoUrl": "",
+  "speakers": {},
+  "chapters": [],
+  "transcript": [
+    {
+      "start": 133,
+      "end": 294,
+      "speaker": "",
+      "text": "Is on it?"
+    },
+    {
+      "start": 294,
+      "end": 344,
+      "speaker": "",
+      "text": "Hey, Alan, can you hear us?"
+    },
+    {
+      "start": 344,
+      "end": 348,
+      "speaker": "",
+      "text": "No, I can hear you, but I can't hear M. Door."
+    },
+    {
+      "start": 348,
+      "end": 351,
+      "speaker": "",
+      "text": "I was just about to ask. Thanks, Gee."
+    },
+    {
+      "start": 351,
+      "end": 354,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 354,
+      "end": 410,
+      "speaker": "",
+      "text": "So it might have been my headphones done for a second."
+    },
+    {
+      "start": 410,
+      "end": 413,
+      "speaker": "",
+      "text": "We still talk."
+    },
+    {
+      "start": 413,
+      "end": 430,
+      "speaker": "",
+      "text": "Lin."
+    },
+    {
+      "start": 430,
+      "end": 433,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 433,
+      "end": 435,
+      "speaker": "",
+      "text": "Hi, John."
+    },
+    {
+      "start": 434,
+      "end": 436,
+      "speaker": "",
+      "text": "Is Alan."
+    },
+    {
+      "start": 435,
+      "end": 437,
+      "speaker": "",
+      "text": "Yeah, can you hear me?"
+    },
+    {
+      "start": 437,
+      "end": 440,
+      "speaker": "",
+      "text": "I can hear you know, slide and clear."
+    },
+    {
+      "start": 440,
+      "end": 444,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 444,
+      "end": 447,
+      "speaker": "",
+      "text": "Shall we get started now?"
+    },
+    {
+      "start": 447,
+      "end": 452,
+      "speaker": "",
+      "text": "Yeah, Max Rory is out of office, so she won't be joining today and so is"
+    },
+    {
+      "start": 452,
+      "end": 456,
+      "speaker": "",
+      "text": "Jens as well. So let's get started and any topics for"
+    },
+    {
+      "start": 456,
+      "end": 459,
+      "speaker": "",
+      "text": "Victor Lane, I'll take away to the relevant team"
+    },
+    {
+      "start": 459,
+      "end": 461,
+      "speaker": "",
+      "text": "members."
+    },
+    {
+      "start": 460,
+      "end": 462,
+      "speaker": "",
+      "text": "Okay, okay, yeah."
+    },
+    {
+      "start": 462,
+      "end": 466,
+      "speaker": "",
+      "text": "Can I see our screen?"
+    },
+    {
+      "start": 466,
+      "end": 468,
+      "speaker": "",
+      "text": "Yep."
+    },
+    {
+      "start": 467,
+      "end": 469,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 468,
+      "end": 472,
+      "speaker": "",
+      "text": "OK, let's begin the from the Victor Lamb. OK,"
+    },
+    {
+      "start": 472,
+      "end": 478,
+      "speaker": "",
+      "text": "so the first topic is regarding the G-sensor orientations. Yeah,"
+    },
+    {
+      "start": 478,
+      "end": 484,
+      "speaker": "",
+      "text": "I think and Doris Q. has updated the ticket and and provide"
+    },
+    {
+      "start": 484,
+      "end": 488,
+      "speaker": "",
+      "text": "the feedback about this case."
+    },
+    {
+      "start": 488,
+      "end": 493,
+      "speaker": "",
+      "text": "And we also, and still found the orientations issue"
+    },
+    {
+      "start": 493,
+      "end": 500,
+      "speaker": "",
+      "text": "still occurs in the V. 713 dot dot dot 3, yeah."
+    },
+    {
+      "start": 500,
+      "end": 505,
+      "speaker": "",
+      "text": "Okay, yeah, let me take a look at this. I'm a bit confused as to why there's even"
+    },
+    {
+      "start": 505,
+      "end": 510,
+      "speaker": "",
+      "text": "an option to orientate the display at all, because this is a standard product where"
+    },
+    {
+      "start": 510,
+      "end": 515,
+      "speaker": "",
+      "text": "it will always be in a landscape mode. So let me have a discussion with the"
+    },
+    {
+      "start": 515,
+      "end": 519,
+      "speaker": "",
+      "text": "Android team offline, and then I'll come back to you."
+    },
+    {
+      "start": 519,
+      "end": 523,
+      "speaker": "",
+      "text": "I might even raise an internal ticket specifically for this item and link it to"
+    },
+    {
+      "start": 523,
+      "end": 526,
+      "speaker": "",
+      "text": "your external ticket. So keep an eye out for that. But yeah,"
+    },
+    {
+      "start": 526,
+      "end": 528,
+      "speaker": "",
+      "text": "I'll take this offline."
+    },
+    {
+      "start": 528,
+      "end": 530,
+      "speaker": "",
+      "text": "Okay, yeah, thank you."
+    },
+    {
+      "start": 530,
+      "end": 535,
+      "speaker": "",
+      "text": "OK, let's go on the next. The next topic is regarding the CVE,"
+    },
+    {
+      "start": 535,
+      "end": 541,
+      "speaker": "",
+      "text": "the CVE issues, right? So, I think Donna has has fixed this issue,"
+    },
+    {
+      "start": 541,
+      "end": 548,
+      "speaker": "",
+      "text": "and we will provide a code job containing the patch list by this by the end of this"
+    },
+    {
+      "start": 548,
+      "end": 551,
+      "speaker": "",
+      "text": "week, yeah."
+    },
+    {
+      "start": 551,
+      "end": 553,
+      "speaker": "",
+      "text": "Okay, thank you very much."
+    },
+    {
+      "start": 553,
+      "end": 559,
+      "speaker": "",
+      "text": "Yeah, OK, OK, so let's go on the the next the next"
+    },
+    {
+      "start": 559,
+      "end": 566,
+      "speaker": "",
+      "text": "topic is regarding the fact the the rework of the victim, right? So,"
+    },
+    {
+      "start": 566,
+      "end": 572,
+      "speaker": "",
+      "text": "I say I say and Donner has flashed the the the OSDV token."
+    },
+    {
+      "start": 572,
+      "end": 576,
+      "speaker": "",
+      "text": "And, and then we found the the dial port and"
+    },
+    {
+      "start": 576,
+      "end": 581,
+      "speaker": "",
+      "text": "the ADB root, the the can be used, yeah, so,"
+    },
+    {
+      "start": 581,
+      "end": 588,
+      "speaker": "",
+      "text": "and and and now and the teams is working on the the M the MMI test and other"
+    },
+    {
+      "start": 588,
+      "end": 596,
+      "speaker": "",
+      "text": "functions and and so we have not we temporary have not other."
+    },
+    {
+      "start": 596,
+      "end": 598,
+      "speaker": "",
+      "text": "Uhh."
+    },
+    {
+      "start": 597,
+      "end": 601,
+      "speaker": "",
+      "text": "Ohh, other assistance from from from VFI team,"
+    },
+    {
+      "start": 601,
+      "end": 616,
+      "speaker": "",
+      "text": "yeah, so thank you, thank you for your help, yeah."
+    },
+    {
+      "start": 616,
+      "end": 624,
+      "speaker": "",
+      "text": "Okay, okay, and the next, the next topic, the next topic is regarding the, yeah,"
+    },
+    {
+      "start": 624,
+      "end": 632,
+      "speaker": "",
+      "text": "is is regarding the pre-build the the the ABK and in for the Victor Lamb, yeah, so,"
+    },
+    {
+      "start": 632,
+      "end": 636,
+      "speaker": "",
+      "text": "and and the team has also fixed this issue."
+    },
+    {
+      "start": 636,
+      "end": 640,
+      "speaker": "",
+      "text": "And uh, we provide also we provide the code jobs"
+    },
+    {
+      "start": 640,
+      "end": 643,
+      "speaker": "",
+      "text": "contained in the patches."
+    },
+    {
+      "start": 643,
+      "end": 649,
+      "speaker": "",
+      "text": "By, by, by, by, by this, by the by this end of this week, yeah."
+    },
+    {
+      "start": 649,
+      "end": 651,
+      "speaker": "",
+      "text": "OK, so this will be included in Friday as"
+    },
+    {
+      "start": 650,
+      "end": 652,
+      "speaker": "",
+      "text": "well. OK, thank you."
+    },
+    {
+      "start": 651,
+      "end": 653,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 653,
+      "end": 659,
+      "speaker": "",
+      "text": "Okay, yeah, the next, okay, let's go on the next, the next,"
+    },
+    {
+      "start": 659,
+      "end": 665,
+      "speaker": "",
+      "text": "the next topic is regarding the camera, the cat, yeah,"
+    },
+    {
+      "start": 665,
+      "end": 671,
+      "speaker": "",
+      "text": "the is regarding the the camera, the camera orientations."
+    },
+    {
+      "start": 671,
+      "end": 678,
+      "speaker": "",
+      "text": "So, but they just, I think it's the minor issues, you know,"
+    },
+    {
+      "start": 678,
+      "end": 686,
+      "speaker": "",
+      "text": "so the recorded video and the and the capture images show via the subnet are"
+    },
+    {
+      "start": 686,
+      "end": 693,
+      "speaker": "",
+      "text": "still rotate 90 degrees on the counterclockwise versus the live preview."
+    },
+    {
+      "start": 693,
+      "end": 702,
+      "speaker": "",
+      "text": "But when we when we cheque the the the the images and the and the video from the"
+    },
+    {
+      "start": 702,
+      "end": 708,
+      "speaker": "",
+      "text": "gallery, so all the all the orientations of the"
+    },
+    {
+      "start": 708,
+      "end": 715,
+      "speaker": "",
+      "text": "video and the images, the it is all correct."
+    },
+    {
+      "start": 715,
+      "end": 719,
+      "speaker": "",
+      "text": "Okay, yeah, so I replied in the ticket yesterday"
+    },
+    {
+      "start": 719,
+      "end": 721,
+      "speaker": "",
+      "text": "asking MDOL's team to raise a separate ticket specifically for this issue that"
+    },
+    {
+      "start": 721,
+      "end": 725,
+      "speaker": "",
+      "text": "Mhm."
+    },
+    {
+      "start": 725,
+      "end": 730,
+      "speaker": "",
+      "text": "you're seeing and include logs or video and photograph of what's happening"
+    },
+    {
+      "start": 730,
+      "end": 734,
+      "speaker": "",
+      "text": "specifically. And then I'll then take this item"
+    },
+    {
+      "start": 734,
+      "end": 738,
+      "speaker": "",
+      "text": "with our internal SQA team and see whether they're seeing the same thing."
+    },
+    {
+      "start": 738,
+      "end": 742,
+      "speaker": "",
+      "text": "And if they are, then we'll raise an internal ticket to"
+    },
+    {
+      "start": 742,
+      "end": 746,
+      "speaker": "",
+      "text": "get this fixed. But you're right, this isn't something that needs to be"
+    },
+    {
+      "start": 746,
+      "end": 750,
+      "speaker": "",
+      "text": "fixed urgently. I'm not even expecting our customers are"
+    },
+    {
+      "start": 750,
+      "end": 754,
+      "speaker": "",
+      "text": "using the camera app dedicated to on this device."
+    },
+    {
+      "start": 754,
+      "end": 757,
+      "speaker": "",
+      "text": "But it would be nice to fix this out. So if you, so for now,"
+    },
+    {
+      "start": 757,
+      "end": 759,
+      "speaker": "",
+      "text": "Sure, sure, yeah."
+    },
+    {
+      "start": 758,
+      "end": 760,
+      "speaker": "",
+      "text": "the ticket that was open in relation to the playback lag and shutter,"
+    },
+    {
+      "start": 759,
+      "end": 762,
+      "speaker": "",
+      "text": "The."
+    },
+    {
+      "start": 762,
+      "end": 767,
+      "speaker": "",
+      "text": "we'll close this out and then we'll raise up a new one specifically for this issue"
+    },
+    {
+      "start": 767,
+      "end": 769,
+      "speaker": "",
+      "text": "Shin."
+    },
+    {
+      "start": 768,
+      "end": 770,
+      "speaker": "",
+      "text": "we're seeing in the colour room."
+    },
+    {
+      "start": 770,
+      "end": 776,
+      "speaker": "",
+      "text": "OK, I will ask, ask, ask SQA team to close the current ticket,"
+    },
+    {
+      "start": 776,
+      "end": 784,
+      "speaker": "",
+      "text": "and we raise another ticket to track the the the the orientation issues, yeah."
+    },
+    {
+      "start": 784,
+      "end": 786,
+      "speaker": "",
+      "text": "OK, thank you."
+    },
+    {
+      "start": 785,
+      "end": 788,
+      "speaker": "",
+      "text": "Thanks."
+    },
+    {
+      "start": 788,
+      "end": 793,
+      "speaker": "",
+      "text": "Okay, so let's go on. The next, the next case is regarding the"
+    },
+    {
+      "start": 793,
+      "end": 798,
+      "speaker": "",
+      "text": "investigate Linux support on the Vitalij Lamb, right? So, I, I, I,"
+    },
+    {
+      "start": 798,
+      "end": 804,
+      "speaker": "",
+      "text": "I have checked the details in the in the tickets from from from from Jens, yeah,"
+    },
+    {
+      "start": 804,
+      "end": 809,
+      "speaker": "",
+      "text": "and we will provide a development timeline on the course by tomorrow."
+    },
+    {
+      "start": 809,
+      "end": 812,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 812,
+      "end": 815,
+      "speaker": "",
+      "text": "Okay, perfect. Thank you very much."
+    },
+    {
+      "start": 815,
+      "end": 817,
+      "speaker": "",
+      "text": "Okay, the next, yeah."
+    },
+    {
+      "start": 817,
+      "end": 819,
+      "speaker": "",
+      "text": "Sorry, Joachim, did you have anything else to add or have"
+    },
+    {
+      "start": 818,
+      "end": 820,
+      "speaker": "",
+      "text": "The."
+    },
+    {
+      "start": 819,
+      "end": 823,
+      "speaker": "",
+      "text": "you reviewed this ticket with the Anis comments?"
+    },
+    {
+      "start": 823,
+      "end": 825,
+      "speaker": "",
+      "text": "And."
+    },
+    {
+      "start": 824,
+      "end": 829,
+      "speaker": "",
+      "text": "No, nothing to add, so just asking if everything is..."
+    },
+    {
+      "start": 829,
+      "end": 833,
+      "speaker": "",
+      "text": "They are clear from the description we gave,"
+    },
+    {
+      "start": 833,
+      "end": 840,
+      "speaker": "",
+      "text": "or are there any immediate questions in order to do that investigation?"
+    },
+    {
+      "start": 840,
+      "end": 842,
+      "speaker": "",
+      "text": "Mm."
+    },
+    {
+      "start": 841,
+      "end": 845,
+      "speaker": "",
+      "text": "We have not at this moment yet."
+    },
+    {
+      "start": 845,
+      "end": 847,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 846,
+      "end": 848,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 846,
+      "end": 850,
+      "speaker": "",
+      "text": "Okay, so you can come back anytime if there are"
+    },
+    {
+      "start": 850,
+      "end": 852,
+      "speaker": "",
+      "text": "questions."
+    },
+    {
+      "start": 851,
+      "end": 853,
+      "speaker": "",
+      "text": "That's all, but I have the, I have, I have, I have a question is is is so."
+    },
+    {
+      "start": 852,
+      "end": 862,
+      "speaker": "",
+      "text": "Raising."
+    },
+    {
+      "start": 862,
+      "end": 871,
+      "speaker": "",
+      "text": "Is there any a schedule from from VFI? So, when when VFI it's a need need need the"
+    },
+    {
+      "start": 871,
+      "end": 876,
+      "speaker": "",
+      "text": "Linux OS for some mass production?"
+    },
+    {
+      "start": 876,
+      "end": 880,
+      "speaker": "",
+      "text": "So as of today, this is an exercise to find out how long"
+    },
+    {
+      "start": 880,
+      "end": 883,
+      "speaker": "",
+      "text": "it would take for us to do this type of project."
+    },
+    {
+      "start": 883,
+      "end": 888,
+      "speaker": "",
+      "text": "But there isn't a specific ask for a customer at this moment in time,"
+    },
+    {
+      "start": 888,
+      "end": 893,
+      "speaker": "",
+      "text": "but the product team and the executive leadership team are pushing us to come up"
+    },
+    {
+      "start": 893,
+      "end": 896,
+      "speaker": "",
+      "text": "with a plan as to how long it would take."
+    },
+    {
+      "start": 896,
+      "end": 901,
+      "speaker": "",
+      "text": "So once we have the information from you and we have our internal project plan"
+    },
+    {
+      "start": 901,
+      "end": 904,
+      "speaker": "",
+      "text": "based on that, we can then go to our executive"
+    },
+    {
+      "start": 904,
+      "end": 908,
+      "speaker": "",
+      "text": "leadership team and ask them whether they think that's appropriate or not."
+    },
+    {
+      "start": 908,
+      "end": 911,
+      "speaker": "",
+      "text": "It's not a, we have a deadline at the moment."
+    },
+    {
+      "start": 911,
+      "end": 915,
+      "speaker": "",
+      "text": "Okay, so our target day is based on endorse the"
+    },
+    {
+      "start": 915,
+      "end": 917,
+      "speaker": "",
+      "text": "timeline, right?"
+    },
+    {
+      "start": 917,
+      "end": 922,
+      "speaker": "",
+      "text": "timeline and then our work on top of whatever you provide as well."
+    },
+    {
+      "start": 922,
+      "end": 928,
+      "speaker": "",
+      "text": "OK, yeah, OK, got a point, yeah, so yeah, we provide the timeline and the course by"
+    },
+    {
+      "start": 928,
+      "end": 937,
+      "speaker": "",
+      "text": "tomorrow, yeah."
+    },
+    {
+      "start": 937,
+      "end": 942,
+      "speaker": "",
+      "text": "Okay, so..."
+    },
+    {
+      "start": 942,
+      "end": 944,
+      "speaker": "",
+      "text": "Let's go on, yeah."
+    },
+    {
+      "start": 944,
+      "end": 950,
+      "speaker": "",
+      "text": "The next, uh, the next, the next topic, the next topic is related,"
+    },
+    {
+      "start": 950,
+      "end": 955,
+      "speaker": "",
+      "text": "is related to the LED brightness control."
+    },
+    {
+      "start": 955,
+      "end": 960,
+      "speaker": "",
+      "text": "Yeah, so let me."
+    },
+    {
+      "start": 960,
+      "end": 964,
+      "speaker": "",
+      "text": "So, as a request, as a request from the hardware team,"
+    },
+    {
+      "start": 964,
+      "end": 968,
+      "speaker": "",
+      "text": "right? So..."
+    },
+    {
+      "start": 968,
+      "end": 975,
+      "speaker": "",
+      "text": "The the MLD brightness, the MLD brightness need to be adjustable,"
+    },
+    {
+      "start": 975,
+      "end": 980,
+      "speaker": "",
+      "text": "even if the if it is originally GPIO controlled,"
+    },
+    {
+      "start": 980,
+      "end": 987,
+      "speaker": "",
+      "text": "so accordingly we will emulate the PWM output via GPIO."
+    },
+    {
+      "start": 987,
+      "end": 993,
+      "speaker": "",
+      "text": "Yeah, never, nevertheless, this approach may affect OS performance,"
+    },
+    {
+      "start": 993,
+      "end": 1000,
+      "speaker": "",
+      "text": "and we will carry out optimization in the in the implementation to keep size effect"
+    },
+    {
+      "start": 1000,
+      "end": 1004,
+      "speaker": "",
+      "text": "to a minimum, yeah."
+    },
+    {
+      "start": 1004,
+      "end": 1007,
+      "speaker": "",
+      "text": "Uh, Jim, I see, I know Jeff, uh, Jeffrey, know the details about this, uh,"
+    },
+    {
+      "start": 1007,
+      "end": 1009,
+      "speaker": "",
+      "text": "this requirement, yeah."
+    },
+    {
+      "start": 1009,
+      "end": 1014,
+      "speaker": "",
+      "text": "Oh yeah, John, just for your information, on a big top projects,"
+    },
+    {
+      "start": 1014,
+      "end": 1018,
+      "speaker": "",
+      "text": "we got a report from the customer about a barcode scanning issue when the emmer bin,"
+    },
+    {
+      "start": 1018,
+      "end": 1020,
+      "speaker": "",
+      "text": "Yep."
+    },
+    {
+      "start": 1020,
+      "end": 1022,
+      "speaker": "",
+      "text": "I am aware of this. Yeah, yeah."
+    },
+    {
+      "start": 1021,
+      "end": 1026,
+      "speaker": "",
+      "text": "yeah, you, you know that, okay, okay, so I'll skip, skip the background. So,"
+    },
+    {
+      "start": 1026,
+      "end": 1028,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1027,
+      "end": 1029,
+      "speaker": "",
+      "text": "Zheng Lin, I..."
+    },
+    {
+      "start": 1029,
+      "end": 1033,
+      "speaker": "",
+      "text": "I also opened a ticket for Victat tablet, so you are working on Victat then."
+    },
+    {
+      "start": 1033,
+      "end": 1036,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1036,
+      "end": 1040,
+      "speaker": "",
+      "text": "Sure, yeah, I think it it can be applied to the big,"
+    },
+    {
+      "start": 1040,
+      "end": 1042,
+      "speaker": "",
+      "text": "yeah, and the same way, yeah."
+    },
+    {
+      "start": 1040,
+      "end": 1042,
+      "speaker": "",
+      "text": "Ohh yeah, yeah."
+    },
+    {
+      "start": 1042,
+      "end": 1044,
+      "speaker": "",
+      "text": "Good point. Okay, yep, so our idea is to achieve with a software"
+    },
+    {
+      "start": 1043,
+      "end": 1048,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1048,
+      "end": 1053,
+      "speaker": "",
+      "text": "simulated PWM on that GPIO, but please validate the system"
+    },
+    {
+      "start": 1053,
+      "end": 1056,
+      "speaker": "",
+      "text": "performance impact."
+    },
+    {
+      "start": 1056,
+      "end": 1058,
+      "speaker": "",
+      "text": "Sure, yeah. Yeah, we're concerned about this point."
+    },
+    {
+      "start": 1058,
+      "end": 1064,
+      "speaker": "",
+      "text": "Otherwise, otherwise we might need to, we might need to drive the emmer using"
+    },
+    {
+      "start": 1064,
+      "end": 1069,
+      "speaker": "",
+      "text": "hardware PWM, but, but I introduce a hardware change, yeah,"
+    },
+    {
+      "start": 1069,
+      "end": 1071,
+      "speaker": "",
+      "text": "so let's see, let's see, yeah."
+    },
+    {
+      "start": 1069,
+      "end": 1072,
+      "speaker": "",
+      "text": "Sure, yeah."
+    },
+    {
+      "start": 1072,
+      "end": 1075,
+      "speaker": "",
+      "text": "Okay, bad point, yeah."
+    },
+    {
+      "start": 1075,
+      "end": 1077,
+      "speaker": "",
+      "text": "Sorry, James, other two tickets, because the ticket in the Excel"
+    },
+    {
+      "start": 1077,
+      "end": 1080,
+      "speaker": "",
+      "text": "spreadsheet is just for the tablet."
+    },
+    {
+      "start": 1080,
+      "end": 1082,
+      "speaker": "",
+      "text": "Is the one for the line as well?"
+    },
+    {
+      "start": 1080,
+      "end": 1082,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1082,
+      "end": 1087,
+      "speaker": "",
+      "text": "Yeah, this one is for Lin. I've created for tablet I can share in"
+    },
+    {
+      "start": 1087,
+      "end": 1089,
+      "speaker": "",
+      "text": "chat."
+    },
+    {
+      "start": 1088,
+      "end": 1091,
+      "speaker": "",
+      "text": "I know, so the tablet link is the one that's in"
+    },
+    {
+      "start": 1091,
+      "end": 1093,
+      "speaker": "",
+      "text": "the Excel spreadsheet. There isn't the lane one."
+    },
+    {
+      "start": 1093,
+      "end": 1095,
+      "speaker": "",
+      "text": "So if you can provide the lane ticket, that would be useful."
+    },
+    {
+      "start": 1093,
+      "end": 1095,
+      "speaker": "",
+      "text": "No."
+    },
+    {
+      "start": 1094,
+      "end": 1096,
+      "speaker": "",
+      "text": "Mhm."
+    },
+    {
+      "start": 1096,
+      "end": 1100,
+      "speaker": "",
+      "text": "Tablet."
+    },
+    {
+      "start": 1100,
+      "end": 1102,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1102,
+      "end": 1104,
+      "speaker": "",
+      "text": "Let me cheque this one."
+    },
+    {
+      "start": 1104,
+      "end": 1108,
+      "speaker": "",
+      "text": "OK, but maybe the the the duo ticket is is"
+    },
+    {
+      "start": 1108,
+      "end": 1115,
+      "speaker": "",
+      "text": "come from the Victor the Victor tablet, yeah."
+    },
+    {
+      "start": 1115,
+      "end": 1117,
+      "speaker": "",
+      "text": "Yeah, so I think James has raised two separate"
+    },
+    {
+      "start": 1117,
+      "end": 1119,
+      "speaker": "",
+      "text": "tickets, one for lane and one for tablet. So I just wanted to make sure they were"
+    },
+    {
+      "start": 1118,
+      "end": 1120,
+      "speaker": "",
+      "text": "Yeow."
+    },
+    {
+      "start": 1120,
+      "end": 1122,
+      "speaker": "",
+      "text": "Yeow."
+    },
+    {
+      "start": 1120,
+      "end": 1122,
+      "speaker": "",
+      "text": "Uh, uh."
+    },
+    {
+      "start": 1121,
+      "end": 1123,
+      "speaker": "",
+      "text": "in the right location."
+    },
+    {
+      "start": 1122,
+      "end": 1124,
+      "speaker": "",
+      "text": "Yeah, I think we need to erase another ticket"
+    },
+    {
+      "start": 1124,
+      "end": 1126,
+      "speaker": "",
+      "text": "Uh huh, yeah, this one this one is is for tablet,"
+    },
+    {
+      "start": 1125,
+      "end": 1128,
+      "speaker": "",
+      "text": "to cheque to cheque this."
+    },
+    {
+      "start": 1128,
+      "end": 1130,
+      "speaker": "",
+      "text": "I think the the for for for thirty-eight."
+    },
+    {
+      "start": 1128,
+      "end": 1132,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1132,
+      "end": 1134,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1133,
+      "end": 1135,
+      "speaker": "",
+      "text": "Right."
+    },
+    {
+      "start": 1135,
+      "end": 1137,
+      "speaker": "",
+      "text": "Sorry, I made a mistake here."
+    },
+    {
+      "start": 1137,
+      "end": 1141,
+      "speaker": "",
+      "text": "No, no, it's not your problem. I was just asking so that we had track of"
+    },
+    {
+      "start": 1141,
+      "end": 1143,
+      "speaker": "",
+      "text": "both items, because obviously the tablet one will be"
+    },
+    {
+      "start": 1143,
+      "end": 1147,
+      "speaker": "",
+      "text": "a project where we can potentially change hardware items if we needed to,"
+    },
+    {
+      "start": 1147,
+      "end": 1150,
+      "speaker": "",
+      "text": "whereas the lane is a little bit more of a difficult situation."
+    },
+    {
+      "start": 1150,
+      "end": 1152,
+      "speaker": "",
+      "text": "Yeah, yeah, right. Good point, yeah."
+    },
+    {
+      "start": 1151,
+      "end": 1155,
+      "speaker": "",
+      "text": "So I just wanted to track them as two separate items so that we can keep on top"
+    },
+    {
+      "start": 1155,
+      "end": 1157,
+      "speaker": "",
+      "text": "of that."
+    },
+    {
+      "start": 1156,
+      "end": 1158,
+      "speaker": "",
+      "text": "Sure, yeah, we will can we can raise another ticket"
+    },
+    {
+      "start": 1158,
+      "end": 1160,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1159,
+      "end": 1165,
+      "speaker": "",
+      "text": "to track these issues for the victim line, yeah."
+    },
+    {
+      "start": 1165,
+      "end": 1167,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1167,
+      "end": 1176,
+      "speaker": "",
+      "text": "Okay, okay, let's go on to the next part. Next part is the Victor post, right? So,"
+    },
+    {
+      "start": 1176,
+      "end": 1184,
+      "speaker": "",
+      "text": "the regarding the VG, the VG 102, right, the GMS certification, yeah,"
+    },
+    {
+      "start": 1184,
+      "end": 1192,
+      "speaker": "",
+      "text": "so the first round of the tests, the testing has already, I already..."
+    },
+    {
+      "start": 1192,
+      "end": 1200,
+      "speaker": "",
+      "text": "Uh, we are we ready, uh, we have got the result from the for the"
+    },
+    {
+      "start": 1200,
+      "end": 1208,
+      "speaker": "",
+      "text": "first round, yeah, and uh, yeah, we now we will um."
+    },
+    {
+      "start": 1208,
+      "end": 1212,
+      "speaker": "",
+      "text": "We will, we will fix the the the fail items for"
+    },
+    {
+      "start": 1212,
+      "end": 1216,
+      "speaker": "",
+      "text": "the, yeah, for the GMS certification, yeah,"
+    },
+    {
+      "start": 1216,
+      "end": 1225,
+      "speaker": "",
+      "text": "and everything is is is is is is is going well, yeah."
+    },
+    {
+      "start": 1225,
+      "end": 1230,
+      "speaker": "",
+      "text": "And, but for the we we need we we need the the"
+    },
+    {
+      "start": 1230,
+      "end": 1235,
+      "speaker": "",
+      "text": "the sign build from VFI, but I I think the Yong have had not"
+    },
+    {
+      "start": 1235,
+      "end": 1240,
+      "speaker": "",
+      "text": "provided the sign build to to to to end all side,"
+    },
+    {
+      "start": 1240,
+      "end": 1249,
+      "speaker": "",
+      "text": "so maybe need your help to push Yong have to provide a signed build."
+    },
+    {
+      "start": 1249,
+      "end": 1251,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1251,
+      "end": 1257,
+      "speaker": "",
+      "text": "Do you have a ticket for where you supplied the build to him for signing?"
+    },
+    {
+      "start": 1257,
+      "end": 1259,
+      "speaker": "",
+      "text": "Yeah, we, yeah, we..."
+    },
+    {
+      "start": 1257,
+      "end": 1259,
+      "speaker": "",
+      "text": "Or is that this 992 ticket?"
+    },
+    {
+      "start": 1259,
+      "end": 1266,
+      "speaker": "",
+      "text": "Uh, I think you have built a, you have raised a ticket, right? So,"
+    },
+    {
+      "start": 1266,
+      "end": 1271,
+      "speaker": "",
+      "text": "the ticket, uh, 118..."
+    },
+    {
+      "start": 1271,
+      "end": 1273,
+      "speaker": "",
+      "text": "Can you see it?"
+    },
+    {
+      "start": 1271,
+      "end": 1276,
+      "speaker": "",
+      "text": "Okay, I'm just logging in."
+    },
+    {
+      "start": 1276,
+      "end": 1286,
+      "speaker": "",
+      "text": "Second."
+    },
+    {
+      "start": 1286,
+      "end": 1290,
+      "speaker": "",
+      "text": "Okay, yeah."
+    },
+    {
+      "start": 1290,
+      "end": 1292,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1292,
+      "end": 1295,
+      "speaker": "",
+      "text": "Yeah, let me make sure. So, I'll let Zheng take this. Zheng,"
+    },
+    {
+      "start": 1295,
+      "end": 1298,
+      "speaker": "",
+      "text": "can you take this up with Yong if possible?"
+    },
+    {
+      "start": 1298,
+      "end": 1303,
+      "speaker": "",
+      "text": "I know that he was needing to do some changes to the signing scripts to do this."
+    },
+    {
+      "start": 1303,
+      "end": 1314,
+      "speaker": "",
+      "text": "Okay, thank you. Yeah."
+    },
+    {
+      "start": 1314,
+      "end": 1322,
+      "speaker": "",
+      "text": "Okay, and John, so as discussed previously, right,"
+    },
+    {
+      "start": 1322,
+      "end": 1332,
+      "speaker": "",
+      "text": "so the VFI related app will be, yeah, the VFI related apps compatible with"
+    },
+    {
+      "start": 1332,
+      "end": 1335,
+      "speaker": "",
+      "text": "Android 16 will be."
+    },
+    {
+      "start": 1335,
+      "end": 1340,
+      "speaker": "",
+      "text": "So, we'll be starting, we will start from the end of August,"
+    },
+    {
+      "start": 1340,
+      "end": 1343,
+      "speaker": "",
+      "text": "right?"
+    },
+    {
+      "start": 1343,
+      "end": 1347,
+      "speaker": "",
+      "text": "Yeah, so we still need to have a discussion"
+    },
+    {
+      "start": 1347,
+      "end": 1352,
+      "speaker": "",
+      "text": "internally on priorities, but yes, they weren't due to start any porting"
+    },
+    {
+      "start": 1352,
+      "end": 1356,
+      "speaker": "",
+      "text": "until the end of August. So we were waiting for your release of"
+    },
+    {
+      "start": 1356,
+      "end": 1361,
+      "speaker": "",
+      "text": "the Android OS to us so that we could bring this into our systems."
+    },
+    {
+      "start": 1361,
+      "end": 1365,
+      "speaker": "",
+      "text": "And then also we've confirmed with them they have VG"
+    },
+    {
+      "start": 1365,
+      "end": 1372,
+      "speaker": "",
+      "text": "100 devices that are unsecure, but they can now load this Android 16"
+    },
+    {
+      "start": 1372,
+      "end": 1378,
+      "speaker": "",
+      "text": "image to test out any issues they might find. So, do you,"
+    },
+    {
+      "start": 1378,
+      "end": 1387,
+      "speaker": "",
+      "text": "so this VG 102 dash V dash 1.3.1. This is good enough once"
+    },
+    {
+      "start": 1387,
+      "end": 1389,
+      "speaker": "",
+      "text": "Or is this good enough for the team to use for validation?"
+    },
+    {
+      "start": 1389,
+      "end": 1394,
+      "speaker": "",
+      "text": "Is that what you're stating now that you've done round one testing?"
+    },
+    {
+      "start": 1394,
+      "end": 1400,
+      "speaker": "",
+      "text": "Sure, yeah, we can, we can, we can perform the testings temporarily,"
+    },
+    {
+      "start": 1400,
+      "end": 1405,
+      "speaker": "",
+      "text": "but you know, so we also need to the VFI related apps"
+    },
+    {
+      "start": 1405,
+      "end": 1410,
+      "speaker": "",
+      "text": "need also need to be test by the by the by the by the yeah, the Google case, yeah."
+    },
+    {
+      "start": 1410,
+      "end": 1413,
+      "speaker": "",
+      "text": "Yes."
+    },
+    {
+      "start": 1413,
+      "end": 1419,
+      "speaker": "",
+      "text": "Yeah, this is understood. Sorry, what I was meaning is you've released to"
+    },
+    {
+      "start": 1419,
+      "end": 1423,
+      "speaker": "",
+      "text": "us this VG 102 dash V dash 1.3.1."
+    },
+    {
+      "start": 1423,
+      "end": 1428,
+      "speaker": "",
+      "text": "But we don't have a user debug version of this for our team to then load onto a"
+    },
+    {
+      "start": 1428,
+      "end": 1432,
+      "speaker": "",
+      "text": "VG100 for testing."
+    },
+    {
+      "start": 1432,
+      "end": 1437,
+      "speaker": "",
+      "text": "So could we get a user debug version of this as like a key fill image so that the"
+    },
+    {
+      "start": 1437,
+      "end": 1441,
+      "speaker": "",
+      "text": "team can then load this to a VG 100 for testing?"
+    },
+    {
+      "start": 1441,
+      "end": 1445,
+      "speaker": "",
+      "text": "Sure, yeah, the VG 100 is also is is is also OK for"
+    },
+    {
+      "start": 1445,
+      "end": 1447,
+      "speaker": "",
+      "text": "debugging, yeah."
+    },
+    {
+      "start": 1447,
+      "end": 1451,
+      "speaker": "",
+      "text": "Yeah, OK."
+    },
+    {
+      "start": 1451,
+      "end": 1456,
+      "speaker": "",
+      "text": "So, so if VFI can can provide the support as"
+    },
+    {
+      "start": 1456,
+      "end": 1464,
+      "speaker": "",
+      "text": "as earlier as possible, right? So, maybe I think that the timeline of the"
+    },
+    {
+      "start": 1464,
+      "end": 1474,
+      "speaker": "",
+      "text": "GMS certifications can be, yeah, can be, yeah, completed on on on time."
+    },
+    {
+      "start": 1474,
+      "end": 1476,
+      "speaker": "",
+      "text": "Yeah, of course."
+    },
+    {
+      "start": 1476,
+      "end": 1478,
+      "speaker": "",
+      "text": "K."
+    },
+    {
+      "start": 1476,
+      "end": 1480,
+      "speaker": "",
+      "text": "So I'll work, so Zheng is currently looking after this"
+    },
+    {
+      "start": 1480,
+      "end": 1485,
+      "speaker": "",
+      "text": "from a project perspective internally. So I'll sync up with him later on this"
+    },
+    {
+      "start": 1485,
+      "end": 1491,
+      "speaker": "",
+      "text": "and we'll come up with some information to provide you maybe in like 2 weeks time."
+    },
+    {
+      "start": 1491,
+      "end": 1495,
+      "speaker": "",
+      "text": "Sure, sure, yeah. Thank you. That would be better. Yeah, thank you."
+    },
+    {
+      "start": 1495,
+      "end": 1501,
+      "speaker": "",
+      "text": "Much appreciated for your help."
+    },
+    {
+      "start": 1501,
+      "end": 1506,
+      "speaker": "",
+      "text": "OK, so let's go on. The next part is the biomatch module,"
+    },
+    {
+      "start": 1506,
+      "end": 1510,
+      "speaker": "",
+      "text": "right? So I think we have we have got the update,"
+    },
+    {
+      "start": 1510,
+      "end": 1514,
+      "speaker": "",
+      "text": "the updated feedback from VFI owner, right?"
+    },
+    {
+      "start": 1514,
+      "end": 1520,
+      "speaker": "",
+      "text": "But so maybe we need conclusions regarding the available RAM size."
+    },
+    {
+      "start": 1520,
+      "end": 1526,
+      "speaker": "",
+      "text": "Based on the optimised memory build, so, but we just got some, yeah,"
+    },
+    {
+      "start": 1526,
+      "end": 1529,
+      "speaker": "",
+      "text": "got some files."
+    },
+    {
+      "start": 1529,
+      "end": 1537,
+      "speaker": "",
+      "text": "But we, we, we, we, we do not, we have not the conclusions from from"
+    },
+    {
+      "start": 1537,
+      "end": 1547,
+      "speaker": "",
+      "text": "from VFI whether should go to optimise the the the the the bill or not."
+    },
+    {
+      "start": 1547,
+      "end": 1550,
+      "speaker": "",
+      "text": "Yeah, so I think this needs a bit of internal"
+    },
+    {
+      "start": 1550,
+      "end": 1553,
+      "speaker": "",
+      "text": "discussion before we can provide an answer. Unfortunately, well,"
+    },
+    {
+      "start": 1553,
+      "end": 1557,
+      "speaker": "",
+      "text": "fortunately for them, but Jens and Nageswari are out of office"
+    },
+    {
+      "start": 1557,
+      "end": 1560,
+      "speaker": "",
+      "text": "at the moment. They're taking some time off and so they"
+    },
+    {
+      "start": 1560,
+      "end": 1564,
+      "speaker": "",
+      "text": "won't be able to be involved in the discussions to come up with a solution as"
+    },
+    {
+      "start": 1564,
+      "end": 1566,
+      "speaker": "",
+      "text": "to whether we should be moving forward or not."
+    },
+    {
+      "start": 1566,
+      "end": 1568,
+      "speaker": "",
+      "text": "Mmh."
+    },
+    {
+      "start": 1567,
+      "end": 1571,
+      "speaker": "",
+      "text": "So my ask would be, can we please put any movement on this on"
+    },
+    {
+      "start": 1571,
+      "end": 1576,
+      "speaker": "",
+      "text": "hold until Jens and Nageswari are back for us to review the results?"
+    },
+    {
+      "start": 1576,
+      "end": 1581,
+      "speaker": "",
+      "text": "And then we'll then come back to you on this. So they should be back next week."
+    },
+    {
+      "start": 1581,
+      "end": 1584,
+      "speaker": "",
+      "text": "I think they're back on Wednesday of next week."
+    },
+    {
+      "start": 1584,
+      "end": 1588,
+      "speaker": "",
+      "text": "So we then probably provide you something the following week."
+    },
+    {
+      "start": 1588,
+      "end": 1590,
+      "speaker": "",
+      "text": "In the first call."
+    },
+    {
+      "start": 1590,
+      "end": 1596,
+      "speaker": "",
+      "text": "Sure, sure, yeah. OK, so yeah, we will we will follow up these issues"
+    },
+    {
+      "start": 1596,
+      "end": 1601,
+      "speaker": "",
+      "text": "until we got the updated feedback from VFI sites, yeah,"
+    },
+    {
+      "start": 1601,
+      "end": 1603,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1601,
+      "end": 1608,
+      "speaker": "",
+      "text": "and to decide whether we should go to optimise or or or else, yeah."
+    },
+    {
+      "start": 1608,
+      "end": 1610,
+      "speaker": "",
+      "text": "K."
+    },
+    {
+      "start": 1610,
+      "end": 1616,
+      "speaker": "",
+      "text": "Okay, okay, the next, let's go on, right? The next, the next topic,"
+    },
+    {
+      "start": 1616,
+      "end": 1621,
+      "speaker": "",
+      "text": "the next topic is, is I think is is is is related to VFI"
+    },
+    {
+      "start": 1621,
+      "end": 1626,
+      "speaker": "",
+      "text": "signed apps, right? So, I think this this ticket is confirm"
+    },
+    {
+      "start": 1626,
+      "end": 1633,
+      "speaker": "",
+      "text": "confirm you, right?"
+    },
+    {
+      "start": 1633,
+      "end": 1637,
+      "speaker": "",
+      "text": "So this was an ask from our biometric team at the moment,"
+    },
+    {
+      "start": 1637,
+      "end": 1643,
+      "speaker": "",
+      "text": "because any device that is available today can have any application loaded to"
+    },
+    {
+      "start": 1643,
+      "end": 1645,
+      "speaker": "",
+      "text": "it, even if it's in a secure state. And so this was an ask from them."
+    },
+    {
+      "start": 1645,
+      "end": 1647,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1647,
+      "end": 1652,
+      "speaker": "",
+      "text": "And so now that I have the information as to how long it would take,"
+    },
+    {
+      "start": 1652,
+      "end": 1656,
+      "speaker": "",
+      "text": "and or to implement this feature, I will now take this back to the"
+    },
+    {
+      "start": 1656,
+      "end": 1658,
+      "speaker": "",
+      "text": "biometric team and ask them whether they think this is do whether this is the"
+    },
+    {
+      "start": 1658,
+      "end": 1661,
+      "speaker": "",
+      "text": "Sure."
+    },
+    {
+      "start": 1661,
+      "end": 1665,
+      "speaker": "",
+      "text": "right thing to be doing. And then also then I will give you a go"
+    },
+    {
+      "start": 1665,
+      "end": 1668,
+      "speaker": "",
+      "text": "ahead in the ticket to do this."
+    },
+    {
+      "start": 1668,
+      "end": 1672,
+      "speaker": "",
+      "text": "OK, yeah, I, I, so I say I'm the owner has, yeah,"
+    },
+    {
+      "start": 1672,
+      "end": 1677,
+      "speaker": "",
+      "text": "I saw analyse the requirements from your size, and yeah,"
+    },
+    {
+      "start": 1677,
+      "end": 1681,
+      "speaker": "",
+      "text": "I think we think it is it is feasible, yeah,"
+    },
+    {
+      "start": 1681,
+      "end": 1687,
+      "speaker": "",
+      "text": "to it is about to to implement it to implement this these features."
+    },
+    {
+      "start": 1687,
+      "end": 1695,
+      "speaker": "",
+      "text": "Yeah, but maybe we need maybe 22 weeks to, yeah, to finish this job."
+    },
+    {
+      "start": 1695,
+      "end": 1698,
+      "speaker": "",
+      "text": "Yeah, yeah, okay, so let me do this to the internal team,"
+    },
+    {
+      "start": 1698,
+      "end": 1701,
+      "speaker": "",
+      "text": "and then I'll come back to you on whether to action this or not."
+    },
+    {
+      "start": 1701,
+      "end": 1706,
+      "speaker": "",
+      "text": "Okay, yeah."
+    },
+    {
+      "start": 1706,
+      "end": 1715,
+      "speaker": "",
+      "text": "Okay, the next, the next topic, the next topic is related to this, so you,"
+    },
+    {
+      "start": 1715,
+      "end": 1720,
+      "speaker": "",
+      "text": "so VFI, so ask them door to implement such as the"
+    },
+    {
+      "start": 1720,
+      "end": 1728,
+      "speaker": "",
+      "text": "the OSDV token, right? Similar to the, right?"
+    },
+    {
+      "start": 1728,
+      "end": 1734,
+      "speaker": "",
+      "text": "That's correct. Yeah. So as it is today, if we were to implement the above item in"
+    },
+    {
+      "start": 1734,
+      "end": 1738,
+      "speaker": "",
+      "text": "relation to signing or only allowing VFI signed applications to be loaded,"
+    },
+    {
+      "start": 1738,
+      "end": 1744,
+      "speaker": "",
+      "text": "we would then also then want to limit the ability for somebody to load a user debug"
+    },
+    {
+      "start": 1744,
+      "end": 1748,
+      "speaker": "",
+      "text": "build, which would then also then allow them to"
+    },
+    {
+      "start": 1748,
+      "end": 1753,
+      "speaker": "",
+      "text": "load any application, not necessarily a VFI signed application"
+    },
+    {
+      "start": 1753,
+      "end": 1755,
+      "speaker": "",
+      "text": "for development purposes. And so we want to implement some way of"
+    },
+    {
+      "start": 1755,
+      "end": 1757,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1757,
+      "end": 1761,
+      "speaker": "",
+      "text": "making it so that this is only available or only, you know,"
+    },
+    {
+      "start": 1761,
+      "end": 1764,
+      "speaker": "",
+      "text": "accessible to both end or and to VFI teams."
+    },
+    {
+      "start": 1764,
+      "end": 1767,
+      "speaker": "",
+      "text": "And this would not be then allowed for an external."
+    },
+    {
+      "start": 1767,
+      "end": 1769,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1768,
+      "end": 1771,
+      "speaker": "",
+      "text": "person. So if somebody got hold of a user debug"
+    },
+    {
+      "start": 1771,
+      "end": 1774,
+      "speaker": "",
+      "text": "build, may that be by accident or on purpose,"
+    },
+    {
+      "start": 1774,
+      "end": 1780,
+      "speaker": "",
+      "text": "they wouldn't be able to load it without our permissions via a token request."
+    },
+    {
+      "start": 1780,
+      "end": 1783,
+      "speaker": "",
+      "text": "And so this is why we want to implement such a tool."
+    },
+    {
+      "start": 1783,
+      "end": 1789,
+      "speaker": "",
+      "text": "So I understand Carl came back to me in the ticket with some questions."
+    },
+    {
+      "start": 1789,
+      "end": 1793,
+      "speaker": "",
+      "text": "I've tried to provide some answers and I'm working with the team to provide"
+    },
+    {
+      "start": 1793,
+      "end": 1796,
+      "speaker": "",
+      "text": "other answers. And then we'll have a further discussion"
+    },
+    {
+      "start": 1796,
+      "end": 1798,
+      "speaker": "",
+      "text": "on the ticket on this topic until I can get approval as to whether we want to do"
+    },
+    {
+      "start": 1797,
+      "end": 1801,
+      "speaker": "",
+      "text": "****."
+    },
+    {
+      "start": 1801,
+      "end": 1804,
+      "speaker": "",
+      "text": "this and implement this."
+    },
+    {
+      "start": 1804,
+      "end": 1810,
+      "speaker": "",
+      "text": "Sure, yeah, so we, we, we, we had yeah checked this the requirement"
+    },
+    {
+      "start": 1810,
+      "end": 1814,
+      "speaker": "",
+      "text": "from you, yeah, but you know the Victor Lamb,"
+    },
+    {
+      "start": 1814,
+      "end": 1821,
+      "speaker": "",
+      "text": "the Victor Lamb have implemented this such such such such features, right? So,"
+    },
+    {
+      "start": 1821,
+      "end": 1827,
+      "speaker": "",
+      "text": "so we just want to know, so can VFI provide a patch?"
+    },
+    {
+      "start": 1827,
+      "end": 1832,
+      "speaker": "",
+      "text": "related to this size features to endure."
+    },
+    {
+      "start": 1832,
+      "end": 1834,
+      "speaker": "",
+      "text": "And that's one of the discussions I'm having with the build team at the moment,"
+    },
+    {
+      "start": 1832,
+      "end": 1837,
+      "speaker": "",
+      "text": "So."
+    },
+    {
+      "start": 1837,
+      "end": 1842,
+      "speaker": "",
+      "text": "sorry, the Android team at the moment, as to whether we can provide this to you"
+    },
+    {
+      "start": 1842,
+      "end": 1847,
+      "speaker": "",
+      "text": "or whether we can provide you a version that would work for this biometric module"
+    },
+    {
+      "start": 1847,
+      "end": 1850,
+      "speaker": "",
+      "text": "or not. I'm yet to have a reply back from Claudia"
+    },
+    {
+      "start": 1850,
+      "end": 1852,
+      "speaker": "",
+      "text": "on this. So I'll push him again."
+    },
+    {
+      "start": 1851,
+      "end": 1853,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 1852,
+      "end": 1855,
+      "speaker": "",
+      "text": "and then I'll come back to you at the ticket."
+    },
+    {
+      "start": 1855,
+      "end": 1860,
+      "speaker": "",
+      "text": "Sure, yeah, so also, so if you can provide some, yes,"
+    },
+    {
+      "start": 1860,
+      "end": 1867,
+      "speaker": "",
+      "text": "some documents about how to the details, how to implement it this feature,"
+    },
+    {
+      "start": 1867,
+      "end": 1875,
+      "speaker": "",
+      "text": "I think it would be better for us to estimate the the the the timeline."
+    },
+    {
+      "start": 1875,
+      "end": 1877,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1875,
+      "end": 1880,
+      "speaker": "",
+      "text": "To get to implement this feature, yeah."
+    },
+    {
+      "start": 1880,
+      "end": 1885,
+      "speaker": "",
+      "text": "OK, so we will we will wait for the further"
+    },
+    {
+      "start": 1885,
+      "end": 1893,
+      "speaker": "",
+      "text": "the further information from your sides and to to decide whether we we will to to"
+    },
+    {
+      "start": 1893,
+      "end": 1896,
+      "speaker": "",
+      "text": "to to to implement this feature on or not. OK."
+    },
+    {
+      "start": 1896,
+      "end": 1898,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 1898,
+      "end": 1900,
+      "speaker": "",
+      "text": "Yep."
+    },
+    {
+      "start": 1899,
+      "end": 1903,
+      "speaker": "",
+      "text": "Yeah, OK. Thanks."
+    },
+    {
+      "start": 1903,
+      "end": 1908,
+      "speaker": "",
+      "text": "Okay, let's go on the next, the next, the next part is the Victor tablet, right?"
+    },
+    {
+      "start": 1908,
+      "end": 1913,
+      "speaker": "",
+      "text": "So, I, I remember, I remember, uh, Nageswari has raised a ticket."
+    },
+    {
+      "start": 1913,
+      "end": 1917,
+      "speaker": "",
+      "text": "I raised a ticket to discuss the the user space,"
+    },
+    {
+      "start": 1917,
+      "end": 1921,
+      "speaker": "",
+      "text": "the sixty-four bit user space for the Victor tablet, right? So,"
+    },
+    {
+      "start": 1921,
+      "end": 1925,
+      "speaker": "",
+      "text": "may I ask with the sixty-four bit user space?"
+    },
+    {
+      "start": 1925,
+      "end": 1934,
+      "speaker": "",
+      "text": "Be considered, be considered, is considered in the future."
+    },
+    {
+      "start": 1934,
+      "end": 1937,
+      "speaker": "",
+      "text": "Yeah, so this is a potential requirement from"
+    },
+    {
+      "start": 1937,
+      "end": 1942,
+      "speaker": "",
+      "text": "some of our customers. They use 64-bit user space."
+    },
+    {
+      "start": 1942,
+      "end": 1947,
+      "speaker": "",
+      "text": "Yeah, so is there conclusions whether Andrew"
+    },
+    {
+      "start": 1947,
+      "end": 1953,
+      "speaker": "",
+      "text": "should support this or not?"
+    },
+    {
+      "start": 1953,
+      "end": 1957,
+      "speaker": "",
+      "text": "I'm not entirely sure. I would need Nageswari to provide"
+    },
+    {
+      "start": 1957,
+      "end": 1961,
+      "speaker": "",
+      "text": "feedback on that. So this will be a next week question."
+    },
+    {
+      "start": 1961,
+      "end": 1966,
+      "speaker": "",
+      "text": "I'll provide the ticket to her and ask her to provide you feedback."
+    },
+    {
+      "start": 1966,
+      "end": 1970,
+      "speaker": "",
+      "text": "OK, yeah, thanks. Thanks for your help. Yeah, OK,"
+    },
+    {
+      "start": 1970,
+      "end": 1976,
+      "speaker": "",
+      "text": "so we will maybe we we need to discuss this this this this this topic at next"
+    },
+    {
+      "start": 1976,
+      "end": 1978,
+      "speaker": "",
+      "text": "next week, right?"
+    },
+    {
+      "start": 1978,
+      "end": 1981,
+      "speaker": "",
+      "text": "Yes, that would be a pretty good idea."
+    },
+    {
+      "start": 1981,
+      "end": 1985,
+      "speaker": "",
+      "text": "Yeah, yeah, thank you. Yeah, OK, so the next,"
+    },
+    {
+      "start": 1985,
+      "end": 1991,
+      "speaker": "",
+      "text": "the last topic is regarding the, yeah, the the Victor tablet and the the power"
+    },
+    {
+      "start": 1991,
+      "end": 1997,
+      "speaker": "",
+      "text": "management requirements, yeah, as discussed last last last week, right?"
+    },
+    {
+      "start": 1997,
+      "end": 2001,
+      "speaker": "",
+      "text": "So, and has completed all functions specified"
+    },
+    {
+      "start": 2001,
+      "end": 2003,
+      "speaker": "",
+      "text": "in the SRD."
+    },
+    {
+      "start": 2002,
+      "end": 2007,
+      "speaker": "",
+      "text": "Right, so, and then, and then we have upload the checklist,"
+    },
+    {
+      "start": 2007,
+      "end": 2013,
+      "speaker": "",
+      "text": "the checklist for all these functions, so, and maybe need some VFI review and"
+    },
+    {
+      "start": 2013,
+      "end": 2017,
+      "speaker": "",
+      "text": "provide feedback to us, yeah."
+    },
+    {
+      "start": 2017,
+      "end": 2021,
+      "speaker": "",
+      "text": "Okay, yeah, so this is again the Nageswari feedback."
+    },
+    {
+      "start": 2021,
+      "end": 2026,
+      "speaker": "",
+      "text": "So, I'll make a note and ask her to do this."
+    },
+    {
+      "start": 2026,
+      "end": 2028,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 2026,
+      "end": 2028,
+      "speaker": "",
+      "text": "Okay, so once, once the we got the confirmation from VFI,"
+    },
+    {
+      "start": 2028,
+      "end": 2033,
+      "speaker": "",
+      "text": "First one."
+    },
+    {
+      "start": 2033,
+      "end": 2042,
+      "speaker": "",
+      "text": "and we will provide the latest code jobs containing the patches and the to to to"
+    },
+    {
+      "start": 2042,
+      "end": 2045,
+      "speaker": "",
+      "text": "VFI, yeah."
+    },
+    {
+      "start": 2045,
+      "end": 2049,
+      "speaker": "",
+      "text": "Hey, Jenny, there are two related tickets in that"
+    },
+    {
+      "start": 2049,
+      "end": 2053,
+      "speaker": "",
+      "text": "ticket. Could you update them accordingly?"
+    },
+    {
+      "start": 2053,
+      "end": 2055,
+      "speaker": "",
+      "text": "Sure, yeah, so, and which, which, which ticket?"
+    },
+    {
+      "start": 2054,
+      "end": 2058,
+      "speaker": "",
+      "text": "Mhm."
+    },
+    {
+      "start": 2058,
+      "end": 2063,
+      "speaker": "",
+      "text": "If you open the 392, there are two."
+    },
+    {
+      "start": 2063,
+      "end": 2065,
+      "speaker": "",
+      "text": "We're 19."
+    },
+    {
+      "start": 2064,
+      "end": 2067,
+      "speaker": "",
+      "text": "Tickets."
+    },
+    {
+      "start": 2067,
+      "end": 2070,
+      "speaker": "",
+      "text": "So, the Victor tablet, right?"
+    },
+    {
+      "start": 2070,
+      "end": 2072,
+      "speaker": "",
+      "text": "Yeah, yeah."
+    },
+    {
+      "start": 2071,
+      "end": 2077,
+      "speaker": "",
+      "text": "OK, so have a later, send your Lin."
+    },
+    {
+      "start": 2077,
+      "end": 2079,
+      "speaker": "",
+      "text": "So just wait for a sec."
+    },
+    {
+      "start": 2079,
+      "end": 2090,
+      "speaker": "",
+      "text": "OK, meeting way out, OK, good."
+    },
+    {
+      "start": 2090,
+      "end": 2100,
+      "speaker": "",
+      "text": "In this case."
+    },
+    {
+      "start": 2100,
+      "end": 2105,
+      "speaker": "",
+      "text": "I mean the desk item, that ticket includes 2 sub-tickets."
+    },
+    {
+      "start": 2105,
+      "end": 2114,
+      "speaker": "",
+      "text": "I want you to update them accordingly."
+    },
+    {
+      "start": 2114,
+      "end": 2119,
+      "speaker": "",
+      "text": "Expected."
+    },
+    {
+      "start": 2119,
+      "end": 2125,
+      "speaker": "",
+      "text": "Yeah, yeah."
+    },
+    {
+      "start": 2125,
+      "end": 2127,
+      "speaker": "",
+      "text": "Hold on."
+    },
+    {
+      "start": 2126,
+      "end": 2128,
+      "speaker": "",
+      "text": "I just."
+    },
+    {
+      "start": 2128,
+      "end": 2135,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 2135,
+      "end": 2137,
+      "speaker": "",
+      "text": "Oh."
+    },
+    {
+      "start": 2137,
+      "end": 2141,
+      "speaker": "",
+      "text": "Item."
+    },
+    {
+      "start": 2141,
+      "end": 2147,
+      "speaker": "",
+      "text": "Mm."
+    },
+    {
+      "start": 2147,
+      "end": 2149,
+      "speaker": "",
+      "text": "So, just to take it."
+    },
+    {
+      "start": 2147,
+      "end": 2153,
+      "speaker": "",
+      "text": "Oh."
+    },
+    {
+      "start": 2153,
+      "end": 2157,
+      "speaker": "",
+      "text": "OK."
+    },
+    {
+      "start": 2157,
+      "end": 2159,
+      "speaker": "",
+      "text": "Yeah."
+    },
+    {
+      "start": 2159,
+      "end": 2162,
+      "speaker": "",
+      "text": "A day."
+    },
+    {
+      "start": 2162,
+      "end": 2164,
+      "speaker": "",
+      "text": "Okay."
+    },
+    {
+      "start": 2164,
+      "end": 2167,
+      "speaker": "",
+      "text": "Beyond, beyond."
+    },
+    {
+      "start": 2167,
+      "end": 2170,
+      "speaker": "",
+      "text": "Mm."
+    },
+    {
+      "start": 2170,
+      "end": 2172,
+      "speaker": "",
+      "text": "OK. OK. Thank you."
+    },
+    {
+      "start": 2171,
+      "end": 2182,
+      "speaker": "",
+      "text": "Mmh."
+    },
+    {
+      "start": 2182,
+      "end": 2185,
+      "speaker": "",
+      "text": "Okay, James, do you have any other topic need to be"
+    },
+    {
+      "start": 2185,
+      "end": 2187,
+      "speaker": "",
+      "text": "discussed?"
+    },
+    {
+      "start": 2187,
+      "end": 2189,
+      "speaker": "",
+      "text": "Nothing from me, thanks."
+    },
+    {
+      "start": 2189,
+      "end": 2191,
+      "speaker": "",
+      "text": "Okay, Jiang."
+    },
+    {
+      "start": 2191,
+      "end": 2198,
+      "speaker": "",
+      "text": "Do you have any other topic?"
+    },
+    {
+      "start": 2198,
+      "end": 2200,
+      "speaker": "",
+      "text": "Hello, John."
+    },
+    {
+      "start": 2198,
+      "end": 2201,
+      "speaker": "",
+      "text": "John is dropping a call, I think."
+    },
+    {
+      "start": 2201,
+      "end": 2203,
+      "speaker": "",
+      "text": "He's not online."
+    },
+    {
+      "start": 2202,
+      "end": 2208,
+      "speaker": "",
+      "text": "No, okay, okay, so when I think sales are."
+    },
+    {
+      "start": 2208,
+      "end": 2212,
+      "speaker": "",
+      "text": "Nothing, nothing, nothing else need to be discussed this at"
+    },
+    {
+      "start": 2212,
+      "end": 2216,
+      "speaker": "",
+      "text": "this moment, yeah, OK."
+    },
+    {
+      "start": 2216,
+      "end": 2219,
+      "speaker": "",
+      "text": "So, you know, more start topic that we discussed,"
+    },
+    {
+      "start": 2219,
+      "end": 2223,
+      "speaker": "",
+      "text": "we will conclude this meeting. OK, thank you, everyone."
+    },
+    {
+      "start": 2223,
+      "end": 2225,
+      "speaker": "",
+      "text": "Thank you, bye."
+    },
+    {
+      "start": 2224,
+      "end": 2226,
+      "speaker": "",
+      "text": "Thank you."
+    },
+    {
+      "start": 2225,
+      "end": 2230,
+      "speaker": "",
+      "text": "Is."
+    }
+  ],
+  "_note": "从浏览器页面提取的备份：说话人信息在原文件中，请重新导入原始 Transcript 文件以显示发言人；此处 speaker 留空。"
+}
