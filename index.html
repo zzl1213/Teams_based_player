@@ -126,11 +126,38 @@
       </div>
 
       <!-- 章节条 -->
-      <div class="chapters-bar" id="chaptersBar" hidden>
-        <span class="chapters-label">章节</span>
-        <div class="chapters-row" id="chaptersRow"></div>
+            <!-- ======= AB 复读控制条 ======= -->
+      <div class="ab-bar" id="abBar">
+        <span class="ab-label">AB 复读</span>
+        <span class="ab-point" id="abTimeA">--:--</span>
+        <button class="ab-btn" id="btnSetA" title="把当前播放位置设为起点 A">设A</button>
+        <span class="ab-arrow">→</span>
+        <span class="ab-point" id="abTimeB">--:--</span>
+        <button class="ab-btn" id="btnSetB" title="把当前播放位置设为终点 B">设B</button>
+        <span class="ab-count-label">次数</span>
+        <select class="ab-count" id="abCount" title="复读次数">
+          <option value="1">1 次</option>
+          <option value="2">2 次</option>
+          <option value="3" selected>3 次</option>
+          <option value="5">5 次</option>
+                    <option value="10">10 次</option>
+          <option value="30">30 次</option>
+          <option value="50">50 次</option>
+          <option value="80">80 次</option>
+          <option value="100">100 次</option>
+          <option value="0">无限循环</option>
+        </select>
+        <button class="ab-btn ab-toggle" id="btnAbToggle" disabled>▶ 复读</button>
+        <button class="ab-btn" id="btnAbClear" disabled>清除</button>
+        <span class="ab-sep">|</span>
+        <button class="ab-btn ab-nudge" id="btnNudgeAM" title="起点 A 提前 0.1 秒（按住 Shift 为 0.5 秒）" disabled>A−</button>
+        <button class="ab-btn ab-nudge" id="btnNudgeAP" title="起点 A 延后 0.1 秒（按住 Shift 为 0.5 秒）" disabled>A+</button>
+        <button class="ab-btn ab-nudge" id="btnNudgeBM" title="终点 B 提前 0.1 秒（按住 Shift 为 0.5 秒）" disabled>B−</button>
+        <button class="ab-btn ab-nudge" id="btnNudgeBP" title="终点 B 延后 0.1 秒（按住 Shift 为 0.5 秒）" disabled>B+</button>
+        <span class="ab-status" id="abStatus"></span>
+        <span class="ab-hint">选中句中的单词/局部后点「复读选中」，若音频对不上，用 A−/A+/B−/B+ 微调区间（Shift=0.5 秒）；Transcript 带逐词时间戳时会精确对齐</span>
       </div>
-    </section>
+</section>
 
     <!-- ======= 右侧 Transcript 面板 ======= -->
     <aside class="transcript-panel" id="transcriptPanel">
@@ -166,6 +193,26 @@
       </div>
 
       <div class="t-list" id="transcriptList"></div>
+
+      <!-- 选区复读操作条（选中多句或单词后浮现） -->
+      <div class="sel-bar" id="selBar" hidden>
+        <span class="sel-info" id="selInfo"></span>
+        <span class="ab-count-label">次数</span>
+        <select class="ab-count" id="selCount" title="本次复读次数">
+          <option value="1">1 次</option>
+          <option value="2">2 次</option>
+          <option value="3" selected>3 次</option>
+          <option value="5">5 次</option>
+                    <option value="10">10 次</option>
+          <option value="30">30 次</option>
+          <option value="50">50 次</option>
+          <option value="80">80 次</option>
+          <option value="100">100 次</option>
+          <option value="0">无限</option>
+        </select>
+        <button class="ab-btn ab-toggle" id="btnRepeatSel">▶ 复读选中</button>
+        <button class="ab-btn" id="btnClearSel">取消</button>
+      </div>
 
       <div class="t-footer" id="transcriptFooter"></div>
     </aside>

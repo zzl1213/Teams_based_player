@@ -31,6 +31,19 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/* 带 0.1 秒精度的时间显示（用于 A/B 微调） */
+function fmtClockP(t) {
+  if (!isFinite(t) || t < 0) t = 0;
+  const d = Math.floor(t * 10) / 10;
+  const h = Math.floor(d / 3600);
+  const m = Math.floor((d % 3600) / 60);
+  const s = d % 60;
+  const mm = String(m).padStart(2, "0");
+  const ss = String(Math.floor(s)).padStart(2, "0");
+  const ds = String(Math.round((s % 1) * 10));
+  return (h > 0 ? `${h}:${mm}:${ss}.${ds}` : `${mm}:${ss}.${ds}`);
+}
+
 /* ---------- 状态 ---------- */
 const state = {
   segments: [],      // 句子级逐字稿
@@ -51,6 +64,8 @@ const state = {
   matchCursor: -1,
   objectUrl: null,
   loadedVideo: false,
+  ab: { a: null, b: null, count: 3, remaining: 0, active: false, label: "" },
+  sel: null, // Transcript 中选中的内容 { startSeg, endSeg, startOff, endOff, text, lines }
 };
 
 const settings = {
@@ -58,6 +73,7 @@ const settings = {
   theme: "light",
   rate: 1,
   fontSize: 13.5,
+  repeatCount: 3,
 };
 const SETTINGS_KEY = "teamsTranscriptPlayer.settings";
 const IMPORT_KEY = "teamsTranscriptPlayer.import";
@@ -88,8 +104,8 @@ const videoEmpty = $("#videoEmpty");
 const videoError = $("#videoError");
 const videoOverlay = $("#videoOverlay");
 const transcriptList = $("#transcriptList");
-const chaptersRow = $("#chaptersRow");
-const chaptersBar = $("#chaptersBar");
+
+
 const progress = $("#progress");
 const progressPlayed = $("#progressPlayed");
 const progressBuffered = $("#progressBuffered");
@@ -131,6 +147,22 @@ function resolveSpeakerId(spk, speakers) {
   return newId;
 }
 
+/* 提取句子中的逐词时间戳（支持多种字段命名），用于精确复读单词 */
+function extractWords(s) {
+  let arr = s.words || s.wordTimings || s.word_timings || s.wordTimes || s.word_times || null;
+  if (!arr && Array.isArray(s.tokens)) arr = s.tokens;
+  if (!Array.isArray(arr)) return [];
+  const out = [];
+  for (const w of arr) {
+    const text = String(w.word ?? w.text ?? w.token ?? w.w ?? "").trim();
+    const ws = Number(w.start ?? w.startTime ?? w.start_time ?? w.from ?? w.s ?? w.t0);
+    const we = Number(w.end ?? w.endTime ?? w.end_time ?? w.to ?? w.e ?? w.t1);
+    if (text && Number.isFinite(ws) && Number.isFinite(we) && we > ws) {
+      out.push({ w: text, s: ws, e: we });
+    }
+  }
+  return out.sort((x, y) => x.s - y.s);
+}
 function normalizeConfig(cfg) {
   const out = {
     title: cfg.title || "会议回放",
@@ -195,6 +227,7 @@ function normalizeConfig(cfg) {
         end: Math.max(end, start + 0.5),
         speaker: spkId,
         text: !spkFieldProvided && nameMatch ? nameMatch[2] : rawText,
+        words: extractWords(s),
       };
     })
     .filter((s) => s.text)
@@ -276,6 +309,7 @@ function highlightText(text) {
 }
 
 function renderTranscript() {
+  clearSelection(true);
   const blocks = state.blocks;
   if (!state.segments.length) {
     transcriptList.innerHTML = `<div class="t-empty">暂无 Transcript 数据<br>可拖入 JSON / VTT / SRT 文件，或在设置中导入</div>`;
@@ -299,6 +333,9 @@ function renderTranscript() {
       return `<div class="t-line${lineActive}" data-start="${line.start}" data-end="${line.end}" data-seg="${line.segIndex}">
         <span class="t-line-time">${fmtClock(line.start)}</span>
         <span class="t-line-text">${highlightText(line.text)}</span>
+        <button class="t-repeat" title="复读本句（选中句中文字可复读单词）" aria-label="复读本句">
+          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" fill="currentColor"/></svg>
+        </button>
       </div>`;
     }).join("");
 
@@ -319,17 +356,7 @@ function renderTranscript() {
   updateTranscriptFooter();
 }
 
-function renderChapters() {
-  if (!state.chapters.length) {
-    chaptersBar.hidden = true;
-    chaptersRow.innerHTML = "";
-    return;
-  }
-  chaptersBar.hidden = false;
-  chaptersRow.innerHTML = state.chapters
-    .map((ch, i) => `<button class="chip" data-chapter="${i}"><span>${esc(ch.title)}</span><span class="chip-time">${fmtClock(ch.start)}</span></button>`)
-    .join("");
-}
+
 
 function updateMeta() {
   $("#meetingTitle").textContent = state.title;
@@ -406,6 +433,7 @@ function progressFromEvent(e) {
 }
 progress.addEventListener("pointerdown", (e) => {
   if (!state.loadedVideo) return;
+  if (state.ab.active) stopABLoop();
   dragActive = true;
   progress.classList.add("dragging");
   progress.setPointerCapture(e.pointerId);
@@ -521,7 +549,15 @@ video.addEventListener("play", () => {
   rAF();
 });
 video.addEventListener("pause", updatePlayUI);
-video.addEventListener("ended", () => { updatePlayUI(); syncTranscript(video.duration || 0); });
+video.addEventListener("ended", () => {
+  if (state.ab.active && state.ab.b !== null && state.ab.b >= (video.duration || 0) - 0.1) {
+    // AB 终点恰在视频末尾：按到达 B 处理（计数/跳回/结束都由 checkAB 决定）
+    checkAB(video.duration || state.ab.b);
+    if (state.ab.active) video.play().catch(() => {});
+    return;
+  }
+  updatePlayUI(); syncTranscript(video.duration || 0);
+});
 video.addEventListener("volumechange", updateVolumeUI);
 video.addEventListener("error", () => {
   if (state.loadedVideo) {
@@ -537,6 +573,7 @@ function rAF() {
   const loop = () => {
     if (!video.paused && !video.ended) {
       updateProgressUI();
+      if (state.ab.active) checkAB(video.currentTime);
       rafId = requestAnimationFrame(loop);
     } else {
       updateProgressUI();
@@ -580,37 +617,206 @@ function syncTranscript(t) {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  // 章节高亮
-  const ci = blockIdx >= 0 ? chapterIndexOf(state.blocks[blockIdx].start) : -1;
-  $$(".chip", chaptersRow).forEach((c) => c.classList.toggle("active", Number(c.dataset.chapter) === ci));
+
+
 }
 
 /* 点击逐字稿跳转：优先定位到具体句子，否则定位到该发言人块开头 */
+/* 区分“拖选文字”与“点击跳转”：拖动超过 4px 视为在选词/选句 */
+let dragMoved = false;
+let downX = 0, downY = 0;
+transcriptList.addEventListener("mousedown", (e) => {
+  dragMoved = false;
+  downX = e.clientX; downY = e.clientY;
+});
+document.addEventListener("mousemove", (e) => {
+  if ((e.buttons & 1) && !dragMoved) {
+    if (Math.abs(e.clientX - downX) > 4 || Math.abs(e.clientY - downY) > 4) dragMoved = true;
+  }
+});
+
 transcriptList.addEventListener("click", (e) => {
+  const repeatBtn = e.target.closest(".t-repeat");
+  if (repeatBtn) { repeatFromLine(repeatBtn.closest(".t-line")); return; }
+  // 拖选或双击/三击形成文字选区后的 click：保留选区，不当作“点击跳转”
+  if (e.detail >= 2 || dragMoved) {
+    dragMoved = false;
+    return;
+  }
   const line = e.target.closest(".t-line");
   if (line) {
     const t = parseFloat(line.dataset.start);
-    if (isFinite(t)) { seekTo(t); video.play().catch(() => {}); syncTranscript(t); }
+    if (isFinite(t)) {
+      if (state.ab.active) stopABLoop();
+      clearSelection();
+      seekTo(t); video.play().catch(() => {}); syncTranscript(t);
+    }
     return;
   }
   const item = e.target.closest(".t-item");
   if (item) {
     const block = state.blocks[Number(item.dataset.block)];
-    if (block) { seekTo(block.start); video.play().catch(() => {}); syncTranscript(block.start); }
+    if (block) {
+      if (state.ab.active) stopABLoop();
+      seekTo(block.start); video.play().catch(() => {}); syncTranscript(block.start);
+    }
   }
 });
 
-/* 章节跳转 */
-chaptersRow.addEventListener("click", (e) => {
-  const chip = e.target.closest(".chip");
-  if (!chip) return;
-  const ch = state.chapters[Number(chip.dataset.chapter)];
-  if (!ch) return;
-  seekTo(ch.start);
-  video.play().catch(() => {});
+/* ---------- Transcript 选区复读（连续多句 / 单个单词） ---------- */
+function closestTranscriptLine(node) {
+  while (node && node !== transcriptList && node !== document.body) {
+    if (node.nodeType === 1 && node.classList && node.classList.contains("t-line")) return node;
+    node = node.parentElement || node.parentNode;
+  }
+  return null;
+}
+
+function updateSelectBar(sel) {
+  const bar = $("#selBar");
+  if (!sel || !sel.text) { bar.hidden = true; return; }
+  $("#selInfo").textContent = sel.lines > 1
+    ? `已选中 ${sel.lines} 句连续发言`
+    : `已选中：「${sel.text.trim().slice(0, 18)}」`;
+  bar.hidden = false;
+}
+
+function clearSelection(silent) {
+  state.sel = null;
+  const bar = $("#selBar");
+  if (bar) bar.hidden = true;
+  if (!silent) {
+    try {
+      const s = window.getSelection();
+      if (s) s.removeAllRanges();
+    } catch (e) { /* ignore */ }
+  }
+}
+
+/* 用当前选中内容设置 AB 区间并开始复读 */
+function repeatFromSelection() {
+  const sel = state.sel;
+  if (!sel) { toast("请先在 Transcript 中选中内容"); return; }
+  const first = state.segments[sel.startSeg];
+  const last = state.segments[sel.endSeg];
+  if (!first || !last) return;
+  let a = first.start, b = last.end;
+  let label = sel.text.trim().slice(0, 24);
+  // 单句内选中的单词 / 句子局部
+  if (sel.startSeg === sel.endSeg && sel.startOff !== null && sel.endOff !== null && sel.endOff > sel.startOff) {
+    const fullText = first.text;
+    label = fullText.slice(sel.startOff, sel.endOff).trim().slice(0, 24);
+    // 1) 若该句带逐词时间戳：直接精确对齐
+    if (first.words && first.words.length) {
+      const ranges = [];
+      let pos = 0;
+      for (const w of first.words) {
+        const idx = fullText.indexOf(w.w, pos);
+        const ws = idx >= 0 ? idx : pos;
+        const we = ws + w.w.length;
+        ranges.push({ ws, we, w });
+        pos = we;
+      }
+      const hit = ranges.filter((r) => r.we > sel.startOff && r.ws < sel.endOff);
+      if (hit.length) {
+        a = Math.max(first.start, hit[0].w.s - 0.03);
+        b = Math.min(first.end, hit[hit.length - 1].w.e + 0.12);
+        state.ab.a = a;
+        state.ab.b = Math.max(b, a + 0.2);
+        clearSelection();
+        startABLoop(label);
+        return;
+      }
+    }
+    // 2) 无逐词时间戳：按比例估算（中文按字符；英文按单词长度加权）
+    const dur = first.end - first.start;
+    const hasCJK = /[\u4e00-\u9fff]/.test(fullText);
+    let rs, re;
+    if (hasCJK) {
+      rs = Math.min(1, sel.startOff / fullText.length);
+      re = Math.min(1, sel.endOff / fullText.length);
+    } else {
+      const bounds = [];
+      const wRe = /\S+/g; let m;
+      while ((m = wRe.exec(fullText)) !== null) bounds.push({ s: m.index, e: m.index + m[0].length });
+      const totalW = bounds.reduce((acc, b) => acc + (b.e - b.s), 0) || 1;
+      const weightBefore = (off) => {
+        let acc = 0;
+        for (const b of bounds) {
+          if (b.e <= off) acc += b.e - b.s;
+          else if (b.s < off) acc += off - b.s;
+          else break;
+        }
+        return acc;
+      };
+      rs = Math.min(1, weightBefore(sel.startOff) / totalW);
+      re = Math.min(1, weightBefore(sel.endOff) / totalW);
+    }
+    let wa = first.start + rs * dur;
+    let wb = first.start + re * dur;
+    // 短单词保底时长，末尾留尾巴避免最后一词被掐断
+    const minDur = 0.6;
+    if (wb - wa < minDur) {
+      const mid = (wa + wb) / 2;
+      wa = mid - minDur / 2;
+      wb = mid + minDur / 2;
+    }
+    a = Math.max(first.start, wa - 0.05);
+    b = Math.min(first.end, wb + 0.12);
+  }
+  state.ab.a = a;
+  state.ab.b = Math.max(b, a + 0.2);
+  clearSelection();
+  startABLoop(label);
+}
+
+/* 记录 Transcript 中的文字选区（拖选多句或单词时触发，含键盘选区） */
+function captureTranscriptSelection() {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.rangeCount) return;
+  const range = sel.getRangeAt(0);
+  const startLine = closestTranscriptLine(range.startContainer);
+  const endLine = closestTranscriptLine(range.endContainer);
+  if (!startLine || !endLine) return;
+  const allLines = $$(".t-line", transcriptList);
+  const i0 = allLines.indexOf(startLine);
+  const i1 = allLines.indexOf(endLine);
+  if (i0 < 0 || i1 < 0 || i0 > i1) return;
+  const selLines = allLines.slice(i0, i1 + 1);
+  const startSeg = Number(selLines[0].dataset.seg);
+  const endSeg = Number(selLines[selLines.length - 1].dataset.seg);
+  // 必须是连续句子
+  if (endSeg - startSeg + 1 !== selLines.length) return;
+  const text = sel.toString().replace(/\s+/g, " ").trim();
+  if (!text) return;
+  let startOff = null, endOff = null;
+  if (selLines.length === 1) {
+    const textEl = selLines[0].querySelector(".t-line-text");
+    if (textEl) {
+      const pre = range.cloneRange();
+      pre.selectNodeContents(textEl);
+      pre.setEnd(range.startContainer, range.startOffset);
+      startOff = pre.toString().length;
+      endOff = startOff + range.toString().length;
+    }
+  }
+  state.sel = { startSeg, endSeg, startOff, endOff, text, lines: selLines.length };
+  updateSelectBar(state.sel);
+}
+
+document.addEventListener("selectionchange", captureTranscriptSelection);
+
+/* 点击 Transcript 面板以外的区域时清除选区 */
+document.addEventListener("mousedown", (e) => {
+  if (state.sel && !e.target.closest(".transcript-panel")) clearSelection();
 });
 
+$("#btnRepeatSel").addEventListener("click", repeatFromSelection);
+$("#btnClearSel").addEventListener("click", () => clearSelection());
+
+
 /* 点击视频切换播放 */
+
 videoShell.addEventListener("click", (e) => {
   if (e.target.closest(".controls") || e.target.closest("#videoEmpty") || e.target.closest("#videoError")) return;
   if (e.target.closest("#btnBigPlay")) { togglePlay(); return; }
@@ -853,7 +1059,6 @@ function applyTranscriptData(data) {
   state.activeIdx = -1;
   computeMatches();
   renderTranscript();
-  renderChapters();
   if (state.loadedVideo) syncTranscript(video.currentTime);
 }
 
@@ -887,15 +1092,15 @@ document.addEventListener("keydown", (e) => {
   if (!$("#settingsModal").hidden && e.key === "Escape") { closeSettings(); return; }
   switch (e.key.toLowerCase()) {
     case " ": case "k": e.preventDefault(); togglePlay(); break;
-    case "arrowleft": e.preventDefault(); seekTo(video.currentTime - (e.shiftKey ? 10 : 5)); break;
-    case "arrowright": e.preventDefault(); seekTo(video.currentTime + (e.shiftKey ? 10 : 5)); break;
+    case "arrowleft": e.preventDefault(); if (state.ab.active) stopABLoop(); seekTo(video.currentTime - (e.shiftKey ? 10 : 5)); break;
+    case "arrowright": e.preventDefault(); if (state.ab.active) stopABLoop(); seekTo(video.currentTime + (e.shiftKey ? 10 : 5)); break;
     case "arrowup": e.preventDefault(); video.volume = Math.min(1, video.volume + 0.1); break;
     case "arrowdown": e.preventDefault(); video.volume = Math.max(0, video.volume - 0.1); break;
     case "m": video.muted = !video.muted; updateVolumeUI(); break;
     case "f": toggleFullscreen(); break;
     case "t": $("#btnScrollLock").click(); break;
-    case "home": seekTo(0); break;
-    case "end": seekTo(video.duration || 0); break;
+    case "home": if (state.ab.active) stopABLoop(); seekTo(0); break;
+    case "end": if (state.ab.active) stopABLoop(); seekTo(video.duration || 0); break;
   }
 });
 
@@ -1014,15 +1219,173 @@ async function generateSampleVideo() {
   toast("示例视频已生成，开始播放");
 }
 
+/* ---------- AB 复读（复读机） ---------- */
+function abCanStart() {
+  return state.ab.a !== null && state.ab.b !== null && state.ab.b > state.ab.a;
+}
+
+function updateABUI() {
+  const abx = state.ab;
+  $("#abTimeA").textContent = abx.a === null ? "--:--" : fmtClockP(abx.a);
+  $("#abTimeB").textContent = abx.b === null ? "--:--" : fmtClockP(abx.b);
+  $("#abTimeA").classList.toggle("active", abx.a !== null);
+  $("#abTimeB").classList.toggle("active", abx.b !== null);
+  const can = abCanStart();
+  $("#btnAbToggle").disabled = !can;
+  $("#btnAbClear").disabled = abx.a === null && abx.b === null;
+  $("#btnAbToggle").classList.toggle("active", abx.active);
+  $("#btnNudgeAM").disabled = abx.a === null;
+  $("#btnNudgeAP").disabled = abx.a === null;
+  $("#btnNudgeBM").disabled = abx.b === null;
+  $("#btnNudgeBP").disabled = abx.b === null;
+  $("#btnAbToggle").textContent = abx.active ? "■ 停止" : "▶ 复读";
+  let status = "";
+  if (abx.active) {
+    const label = abx.label ? `「${abx.label}」` : "";
+    status = abx.remaining === 0
+      ? `${label} 无限循环中`
+      : `${label} 第 ${abx.count - abx.remaining + 1}/${abx.count} 次`;
+  } else if (can) {
+    status = `${fmtClockP(abx.a)} → ${fmtClockP(abx.b)}（时长 ${fmtClockP(abx.b - abx.a)}）`;
+  }
+  $("#abStatus").textContent = status;
+  // 高亮 Transcript 中与 AB 区间相交的句子
+  $$(".t-line").forEach((el) => {
+    const st = parseFloat(el.dataset.start), en = parseFloat(el.dataset.end);
+    const hit = abx.a !== null && abx.b !== null && st <= abx.b && en >= abx.a;
+    el.classList.toggle("ab-range", hit);
+  });
+}
+
+function setPointA() {
+  if (!state.loadedVideo) return;
+  state.ab.a = video.currentTime;
+  if (state.ab.b !== null && state.ab.b <= state.ab.a) state.ab.b = null;
+  state.ab.active = false; state.ab.remaining = 0; state.ab.label = "";
+  updateABUI();
+  toast("已设置起点 A：" + fmtClock(state.ab.a));
+}
+
+function setPointB() {
+  if (!state.loadedVideo) return;
+  const t = video.currentTime;
+  if (state.ab.a !== null && t <= state.ab.a) { toast("终点 B 必须晚于起点 A"); return; }
+  state.ab.b = t;
+  state.ab.active = false; state.ab.remaining = 0; state.ab.label = "";
+  updateABUI();
+  if (abCanStart()) toast(`已设置终点 B：${fmtClock(state.ab.b)}，点击「复读」开始`);
+}
+
+function clearAB() {
+  Object.assign(state.ab, { a: null, b: null, active: false, remaining: 0, label: "" });
+  updateABUI();
+}
+
+function startABLoop(label) {
+  if (!abCanStart()) { toast("请先设置 A / B 区间"); return; }
+  const dur = isFinite(video.duration) ? video.duration : Infinity;
+  if (state.ab.b > dur) state.ab.b = dur;
+  state.ab.count = settings.repeatCount;
+  state.ab.remaining = settings.repeatCount; // 0 = 无限
+  state.ab.active = true;
+  state.ab.label = label || "";
+  seekTo(state.ab.a);
+  video.play().catch(() => {});
+  updateABUI();
+  const n = settings.repeatCount;
+  toast(`开始复读${state.ab.label ? "「" + state.ab.label + "」" : ""}（${n === 0 ? "无限循环" : n + " 次"}）`);
+}
+
+function stopABLoop() {
+  state.ab.active = false; state.ab.remaining = 0; state.ab.label = "";
+  updateABUI();
+}
+
+function toggleAB() {
+  if (state.ab.active) stopABLoop();
+  else startABLoop();
+}
+
+/* 微调 AB 区间（±0.1 秒，Shift=±0.5 秒） */
+function nudgeAB(which, delta) {
+  const abx = state.ab;
+  if (which === "a") {
+    if (abx.a === null) return;
+    abx.a = Math.max(0, abx.a + delta);
+    if (abx.b !== null && abx.b <= abx.a) abx.b = abx.a + 0.1;
+  } else {
+    if (abx.b === null) return;
+    const minB = abx.a === null ? 0 : abx.a + 0.1;
+    abx.b = Math.max(minB, abx.b + delta);
+    if (isFinite(video.duration)) abx.b = Math.min(video.duration, abx.b);
+  }
+  if (abx.active) seekTo(abx.a);
+  updateABUI();
+}
+
+function checkAB(t) {
+  const abx = state.ab;
+  if (!abx.active || abx.a === null || abx.b === null) return;
+  if (t >= abx.b) {
+    if (abx.remaining === 0) { seekTo(abx.a); return; }
+    abx.remaining--;
+    if (abx.remaining > 0) {
+      seekTo(abx.a);
+      updateABUI();
+    } else {
+      abx.active = false;
+      video.pause();
+      updateABUI();
+      toast("复读完成");
+    }
+  } else if (t < abx.a - 0.15) {
+    seekTo(abx.a);
+  }
+}
+
+/* 从 Transcript 句子设置 AB 区间并开始复读（若当前选中包含本句，则复读选中内容） */
+function repeatFromLine(lineEl) {
+  const segIdx = Number(lineEl.dataset.seg);
+  const seg = state.segments[segIdx];
+  if (!seg) return;
+  if (state.sel && state.sel.startSeg <= segIdx && segIdx <= state.sel.endSeg) {
+    repeatFromSelection();
+    return;
+  }
+  state.ab.a = seg.start;
+  state.ab.b = Math.max(seg.end, seg.start + 0.2);
+  startABLoop((seg.text || "").trim().slice(0, 20));
+}
+
+$("#btnSetA").addEventListener("click", setPointA);
+$("#btnSetB").addEventListener("click", setPointB);
+$("#btnAbToggle").addEventListener("click", toggleAB);
+$("#btnAbClear").addEventListener("click", clearAB);
+$("#btnNudgeAM").addEventListener("click", (e) => nudgeAB("a", e.shiftKey ? -0.5 : -0.1));
+$("#btnNudgeAP").addEventListener("click", (e) => nudgeAB("a", e.shiftKey ? 0.5 : 0.1));
+$("#btnNudgeBM").addEventListener("click", (e) => nudgeAB("b", e.shiftKey ? -0.5 : -0.1));
+$("#btnNudgeBP").addEventListener("click", (e) => nudgeAB("b", e.shiftKey ? 0.5 : 0.1));
+function setRepeatCount(v) {
+  settings.repeatCount = v;
+  const abSel = $("#abCount");
+  const selSel = $("#selCount");
+  if (abSel) abSel.value = String(v);
+  if (selSel) selSel.value = String(v);
+  saveSettings();
+}
+$("#abCount").addEventListener("change", (e) => setRepeatCount(parseInt(e.target.value, 10)));
+$("#selCount").addEventListener("change", (e) => setRepeatCount(parseInt(e.target.value, 10)));
 /* ---------- 初始化 ---------- */
 function init() {
   loadSettings();
   loadConfig();
   applySettings();
   renderTranscript();
-  renderChapters();
   updateMeta();
   updatePlayUI();
+  $("#abCount").value = String(settings.repeatCount);
+  $("#selCount").value = String(settings.repeatCount);
+  updateABUI();
 
   // 加载视频
   if (state.videoUrl) {

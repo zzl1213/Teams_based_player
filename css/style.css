@@ -103,7 +103,7 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
 .btn-ghost:hover { background: var(--accent-soft); }
 .btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
 
-/* ---------- 布局 ---------- */
+/* ---------- 布局：左侧视频 / 右侧 Transcript ---------- */
 .layout {
   flex: 1;
   display: grid;
@@ -274,7 +274,7 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
 .speed-menu button:hover { background: var(--accent-soft); }
 .speed-menu button.active { background: var(--accent); color: #fff; }
 
-/* ---------- 章节条 ---------- */
+/* ---------- 章节进度条 ---------- */
 .chapters-bar {
   display: flex; align-items: center; gap: 10px;
   max-width: 1080px; width: 100%; margin: 14px auto 0;
@@ -298,6 +298,7 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
 
 /* ---------- Transcript 面板 ---------- */
 .transcript-panel {
+  position: relative;
   display: flex; flex-direction: column;
   min-width: 0; min-height: 0;
   background: var(--surface);
@@ -408,6 +409,59 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
 .t-text mark { background: #ffe08a; color: #242424; border-radius: 2px; padding: 0 1px; }
 [data-theme="dark"] .t-text mark { background: #9d7d16; color: #fff; }
 
+/* 同发言人合并块内的句子行 */
+.t-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 6px;
+  margin: 0 -6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .12s;
+}
+.t-line + .t-line { margin-top: 2px; }
+.t-line:hover { background: rgba(98, 100, 167, .08); }
+.t-line.active { background: rgba(98, 100, 167, .18); font-weight: 500; }
+[data-theme="dark"] .t-line:hover { background: rgba(139, 140, 199, .16); }
+[data-theme="dark"] .t-line.active { background: rgba(139, 140, 199, .28); }
+.t-line-time {
+  flex: 0 0 auto;
+  min-width: 38px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+.t-line-text { flex: 1 1 auto; min-width: 0; }
+.t-item.active .t-line-time { color: var(--accent-dark); }
+[data-theme="dark"] .t-item.active .t-line-time { color: var(--accent); }
+
+/* 句子右侧的复读按钮 */
+.t-line .t-repeat {
+  flex: 0 0 auto;
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; border-radius: 4px;
+  background: transparent; color: var(--text-3);
+  opacity: 0;
+  transition: opacity .12s, background .12s, color .12s;
+}
+.t-line:hover .t-repeat,
+.t-line .t-repeat:focus-visible { opacity: 1; }
+.t-line .t-repeat:hover { background: var(--accent-soft); color: var(--accent-dark); }
+.t-item.active .t-repeat { color: var(--accent-dark); }
+
+/* AB 区间命中的句子 */
+.t-line.ab-range {
+  background: rgba(255, 196, 0, .14);
+  box-shadow: inset 2px 0 0 rgba(202, 130, 0, .8);
+}
+[data-theme="dark"] .t-line.ab-range {
+  background: rgba(255, 196, 0, .12);
+  box-shadow: inset 2px 0 0 rgba(255, 196, 0, .6);
+}
+
 .t-empty {
   padding: 40px 24px; text-align: center; color: var(--text-3); font-size: 13px;
 }
@@ -419,6 +473,98 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
   display: flex; justify-content: space-between; gap: 8px;
 }
 .t-footer .hint { text-align: right; }
+
+/* ---------- AB 复读控制条 ---------- */
+.ab-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: 1080px; width: 100%;
+  margin: 12px auto 0;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.ab-label { font-weight: 600; color: var(--accent-dark); }
+.ab-point {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-3);
+  min-width: 38px;
+  text-align: center;
+}
+.ab-point.active { color: var(--accent-dark); }
+.ab-arrow { color: var(--text-3); }
+.ab-count-label { margin-left: 4px; }
+.ab-count {
+  height: 26px; padding: 0 6px;
+  border: 1px solid var(--border-strong); border-radius: 4px;
+  background: var(--surface-2); color: var(--text); font-size: 12px;
+}
+.ab-btn {
+  height: 26px; padding: 0 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-strong); border-radius: 4px;
+  background: var(--surface); color: var(--text); font-size: 12px;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.ab-btn:hover:not(:disabled) { background: var(--surface-2); }
+.ab-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ab-btn.ab-toggle { min-width: 76px; }
+.ab-btn.ab-toggle.active {
+  background: var(--danger); border-color: var(--danger); color: #fff;
+}
+.ab-btn.ab-toggle:not(:disabled):not(.active) {
+  background: var(--accent); border-color: var(--accent); color: #fff;
+}
+.ab-btn.ab-toggle:not(:disabled):not(.active):hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+.ab-status {
+  color: var(--accent-dark);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ab-hint {
+  flex-basis: 100%;
+  color: var(--text-3);
+  font-size: 11px;
+}
+.ab-sep { color: var(--text-3); }
+.ab-nudge {
+  padding: 0 8px;
+  font-size: 11px;
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+.ab-nudge:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-dark); }
+
+/* ---------- Transcript 选区复读操作条 ---------- */
+.sel-bar {
+  position: absolute;
+  left: 50%; bottom: 46px;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  z-index: 20;
+  white-space: nowrap;
+  animation: selbar-in .15s ease;
+}
+@keyframes selbar-in { from { transform: translate(-50%, 6px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.sel-info {
+  font-size: 12px;
+  color: var(--accent-dark);
+  font-weight: 600;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* ---------- 弹窗 ---------- */
 .modal-mask {
@@ -486,30 +632,3 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
   .meeting-meta { display: none; }
   .topbar-right .btn-primary { padding: 0 10px; }
 }
-/* ---------- 同发言人合并块内的句子行 ---------- */
-.t-line {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 1px 6px;
-  margin: 0 -6px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background .12s;
-}
-.t-line-time {
-  flex: 0 0 auto;
-  min-width: 38px;
-  text-align: right;
-  font-size: 11px;
-  color: var(--text-3);
-  font-variant-numeric: tabular-nums;
-}
-.t-line-text { flex: 1 1 auto; min-width: 0; }
-.t-item.active .t-line-time { color: var(--accent-dark); }
-[data-theme="dark"] .t-item.active .t-line-time { color: var(--accent); }
-.t-line + .t-line { margin-top: 2px; }
-.t-line:hover { background: rgba(98, 100, 167, .08); }
-.t-line.active { background: rgba(98, 100, 167, .18); font-weight: 500; }
-[data-theme="dark"] .t-line:hover { background: rgba(139, 140, 199, .16); }
-[data-theme="dark"] .t-line.active { background: rgba(139, 140, 199, .28); }
