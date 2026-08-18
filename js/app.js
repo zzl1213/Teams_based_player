@@ -541,6 +541,8 @@ video.addEventListener("durationchange", () => { updateProgressUI(); updateBuffe
 video.addEventListener("progress", updateBufferedUI);
 video.addEventListener("timeupdate", () => {
   updateProgressUI();
+  // 循环边界检测挂在媒体时钟事件上：页面在后台（rAF 暂停）时仍会触发
+  if (state.ab.active) checkAB(video.currentTime);
   syncTranscript(video.currentTime);
 });
 video.addEventListener("play", () => {
@@ -1277,8 +1279,22 @@ function setPointB() {
 }
 
 function clearAB() {
+  stopABTick();
   Object.assign(state.ab, { a: null, b: null, active: false, remaining: 0, label: "" });
   updateABUI();
+}
+
+/* 后台标签页兜底：rAF 在页面隐藏时会被浏览器暂停，
+   用独立定时器 + 媒体 timeupdate 双保险，保证循环在后台也生效 */
+let abTick = null;
+function startABTick() {
+  stopABTick();
+  abTick = setInterval(() => {
+    if (state.ab.active && !video.paused && !video.ended) checkAB(video.currentTime);
+  }, 200);
+}
+function stopABTick() {
+  if (abTick) { clearInterval(abTick); abTick = null; }
 }
 
 function startABLoop(label) {
@@ -1289,6 +1305,7 @@ function startABLoop(label) {
   state.ab.remaining = settings.repeatCount; // 0 = 无限
   state.ab.active = true;
   state.ab.label = label || "";
+  startABTick();
   seekTo(state.ab.a);
   video.play().catch(() => {});
   updateABUI();
@@ -1298,6 +1315,7 @@ function startABLoop(label) {
 
 function stopABLoop() {
   state.ab.active = false; state.ab.remaining = 0; state.ab.label = "";
+  stopABTick();
   updateABUI();
 }
 
@@ -1334,6 +1352,7 @@ function checkAB(t) {
       updateABUI();
     } else {
       abx.active = false;
+      stopABTick();
       video.pause();
       updateABUI();
       toast("复读完成");
