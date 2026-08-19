@@ -468,6 +468,16 @@ $("#btnMute").addEventListener("click", () => {
 });
 
 /* 速度 */
+const SPEED_PRESETS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3];
+function stepSpeed(dir) {
+  let idx = SPEED_PRESETS.indexOf(settings.rate);
+  if (idx < 0) idx = SPEED_PRESETS.indexOf(1);
+  idx = (idx + dir + SPEED_PRESETS.length) % SPEED_PRESETS.length;
+  settings.rate = SPEED_PRESETS[idx];
+  video.playbackRate = settings.rate;
+  saveSettings();
+  updateSpeedBtn();
+}
 function updateSpeedBtn() {
   const r = settings.rate;
   const label = r === 1 ? "1x" : r.toFixed(2).replace(/\.?0+$/, "") + "x";
@@ -1098,6 +1108,8 @@ document.addEventListener("keydown", (e) => {
     case "arrowright": e.preventDefault(); if (state.ab.active) stopABLoop(); seekTo(video.currentTime + (e.shiftKey ? 10 : 5)); break;
     case "arrowup": e.preventDefault(); video.volume = Math.min(1, video.volume + 0.1); break;
     case "arrowdown": e.preventDefault(); video.volume = Math.max(0, video.volume - 0.1); break;
+    case "]": case ">": e.preventDefault(); stepSpeed(1); break;
+    case "[": case "<": e.preventDefault(); stepSpeed(-1); break;
     case "m": video.muted = !video.muted; updateVolumeUI(); break;
     case "f": toggleFullscreen(); break;
     case "t": $("#btnScrollLock").click(); break;
