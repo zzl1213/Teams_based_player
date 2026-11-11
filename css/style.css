@@ -697,3 +697,13 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
 .spk-chip .spk-count { font-size: 10px; color: var(--text-3); }
 .spk-chip.on .spk-count { color: var(--accent-dark); }
 [data-theme="dark"] .spk-chip.on { background: rgba(139, 140, 199, .22); }
+/* 发言人筛选：同步偏移行 */
+.spk-sync {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  font-size: 11px; color: var(--text-2);
+}
+.spk-sync-label { font-weight: 600; color: var(--text-2); }
+.spk-offset-val { min-width: 56px; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent-dark); }
+.spk-sync-hint { color: var(--text-3); }

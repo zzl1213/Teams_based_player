@@ -75,6 +75,7 @@ const settings = {
   rate: 1,
   fontSize: 13.5,
   repeatCount: 3,
+  timeOffset: 0, // Transcript 时间轴相对视频的偏移（秒）：视频时间 = 字幕时间 + timeOffset
 };
 const SETTINGS_KEY = "teamsTranscriptPlayer.settings";
 const IMPORT_KEY = "teamsTranscriptPlayer.import";
@@ -459,29 +460,37 @@ function setAllSpeakers(on) {
 }
 
 /* 播放中跳过未选中发言人的内容 */
-function enforceSpeakerFilter(t) {
+function enforceSpeakerFilter(mediaT) {
   const f = state.spkFilter;
   if (!f.enabled || state.ab.active) return; // AB 复读进行时以 AB 为准
+  if (video.seeking) return;                 // 跳转过程中不重复触发，避免死循环
   const segs = state.segments;
   if (!segs.length) return;
-  const idx = findActiveIndex(t);
-  if (idx < 0) return;
-  const cur = segs[idx];
-  if (f.selected[cur.speaker]) return;
-  let next = -1;
-  for (let i = idx + 1; i < segs.length; i++) {
-    if (f.selected[segs[i].speaker]) { next = i; break; }
+  const t = toSegTime(mediaT);
+  const containing = findContainingSegments(t);
+  // 句子之间没有覆盖的时间：不跳（可能是停顿或字幕未覆盖的音频）
+  if (!containing.length) return;
+  // 只要当前有任一句“选中的发言人”在讲，就正常播放
+  if (containing.some((i) => f.selected[segs[i].speaker])) return;
+  // 当前全部处于未选发言人的句子：只向“后面”找最近的选中发言
+  let targetSegT = null;
+  for (let i = 0; i < segs.length; i++) {
+    const s = segs[i];
+    if (s.start <= t + 0.05) continue;
+    if (f.selected[s.speaker]) { targetSegT = s.start; break; }
   }
-  if (next >= 0) {
-    const target = segs[next].start;
-    if (Math.abs((video.currentTime || 0) - target) > 0.15) seekTo(target);
-  } else if (!video.paused) {
-    video.pause();
-    if (!enforceSpeakerFilter._warnTs || Date.now() - enforceSpeakerFilter._warnTs > 3000) {
-      enforceSpeakerFilter._warnTs = Date.now();
-      toast("已跳过未选发言人的内容，后面没有可播放内容");
+  if (targetSegT === null) {
+    if (!video.paused) {
+      video.pause();
+      if (!enforceSpeakerFilter._warnTs || Date.now() - enforceSpeakerFilter._warnTs > 3000) {
+        enforceSpeakerFilter._warnTs = Date.now();
+        toast("已跳过未选发言人的内容，后面没有可播放内容");
+      }
     }
+    return;
   }
+  const target = toMediaTime(targetSegT);
+  if (target - mediaT > 0.1) seekTo(target);
 }
 
 /* 后台标签页兜底：筛选跳转同样挂在独立定时器上 */
@@ -510,6 +519,38 @@ spkBar.addEventListener("click", (e) => {
 });
 $("#spkAll").addEventListener("click", () => setAllSpeakers(true));
 $("#spkNone").addEventListener("click", () => setAllSpeakers(false));
+
+/* 同步偏移微调：解决字幕/高亮与实际语音对不齐 */
+function renderOffsetUI() {
+  const el = $("#offsetVal");
+  if (!el) return;
+  const v = Number(settings.timeOffset) || 0;
+  el.textContent = (v > 0 ? "+" : "") + v.toFixed(1) + "s";
+}
+function refreshSyncAfterOffset() {
+  state.activeIdx = -2; // 强制重算高亮
+  if (state.loadedVideo) {
+    syncTranscript(video.currentTime);
+    if (state.spkFilter.enabled && !video.paused) enforceSpeakerFilter(video.currentTime);
+  }
+  updateABUI();
+}
+function adjustOffset(delta) {
+  let v = Math.round(((Number(settings.timeOffset) || 0) + delta) * 10) / 10;
+  v = Math.max(-120, Math.min(120, v));
+  settings.timeOffset = v;
+  saveSettings();
+  renderOffsetUI();
+  refreshSyncAfterOffset();
+}
+$("#offsetMinus").addEventListener("click", () => adjustOffset(-0.5));
+$("#offsetPlus").addEventListener("click", () => adjustOffset(0.5));
+$("#offsetVal").addEventListener("click", () => {
+  settings.timeOffset = 0;
+  saveSettings();
+  renderOffsetUI();
+  refreshSyncAfterOffset();
+});
 /* ---------- 播放器控制 ---------- */
 function togglePlay() {
   if (!state.loadedVideo) return;
@@ -731,6 +772,25 @@ function rAF() {
 }
 
 /* ---------- Transcript 联动（块级高亮 + 句级高亮） ---------- */
+/* Transcript 时间轴偏移：视频时间 = 字幕时间 + syncOffset() */
+function syncOffset() {
+  return Number(settings.timeOffset) || 0;
+}
+function toMediaTime(segT) { return segT + syncOffset(); }
+function toSegTime(mediaT) { return mediaT - syncOffset(); }
+
+/* 返回所有“包含 t（字幕时间）”的句子索引，用于重叠/空隙安全的判断 */
+function findContainingSegments(t) {
+  const segs = state.segments;
+  const out = [];
+  for (let i = 0; i < segs.length; i++) {
+    const s = segs[i];
+    if (s.start > t + 0.05) break;
+    if (t <= s.end + 0.05) out.push(i);
+  }
+  return out;
+}
+
 function findActiveIndex(t) {
   const segs = state.segments;
   if (!segs.length) return -1;
@@ -744,8 +804,15 @@ function findActiveIndex(t) {
   return ans;
 }
 
-function syncTranscript(t) {
-  const idx = findActiveIndex(t);
+function syncTranscript(mediaT) {
+  const t = toSegTime(mediaT);
+  const containing = findContainingSegments(t);
+  let idx;
+  if (containing.length) {
+    idx = containing[containing.length - 1]; // 重叠时取开始时间最晚的一段
+  } else {
+    idx = findActiveIndex(t); // 处于句子间空隙：保留上一句高亮
+  }
   if (idx === state.activeIdx) return;
   state.activeIdx = idx;
   const blockIdx = idx >= 0 ? state.blockOfSeg[idx] : -1;
@@ -797,7 +864,8 @@ transcriptList.addEventListener("click", (e) => {
     if (isFinite(t)) {
       if (state.ab.active) stopABLoop();
       clearSelection();
-      seekTo(t); video.play().catch(() => {}); syncTranscript(t);
+      const target = toMediaTime(t);
+      seekTo(target); video.play().catch(() => {}); syncTranscript(target);
     }
     return;
   }
@@ -806,7 +874,8 @@ transcriptList.addEventListener("click", (e) => {
     const block = state.blocks[Number(item.dataset.block)];
     if (block) {
       if (state.ab.active) stopABLoop();
-      seekTo(block.start); video.play().catch(() => {}); syncTranscript(block.start);
+      const target = toMediaTime(block.start);
+      seekTo(target); video.play().catch(() => {}); syncTranscript(target);
     }
   }
 });
@@ -869,8 +938,8 @@ function repeatFromSelection() {
       if (hit.length) {
         a = Math.max(first.start, hit[0].w.s - 0.03);
         b = Math.min(first.end, hit[hit.length - 1].w.e + 0.12);
-        state.ab.a = a;
-        state.ab.b = Math.max(b, a + 0.2);
+        state.ab.a = toMediaTime(a);
+        state.ab.b = Math.max(toMediaTime(b), state.ab.a + 0.2);
         clearSelection();
         startABLoop(label);
         return;
@@ -912,8 +981,8 @@ function repeatFromSelection() {
     a = Math.max(first.start, wa - 0.05);
     b = Math.min(first.end, wb + 0.12);
   }
-  state.ab.a = a;
-  state.ab.b = Math.max(b, a + 0.2);
+  state.ab.a = toMediaTime(a);
+  state.ab.b = Math.max(toMediaTime(b), state.ab.a + 0.2);
   clearSelection();
   startABLoop(label);
 }
@@ -1008,7 +1077,7 @@ function jumpToMatch(dir) {
   const blockIdx = state.blockOfSeg[idx];
   const el = blockIdx >= 0 ? $(`.t-item[data-block="${blockIdx}"]`, transcriptList) : null;
   if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  seekTo(state.segments[idx].start);
+  seekTo(toMediaTime(state.segments[idx].start));
 }
 
 $("#searchInput").addEventListener("input", (e) => {
@@ -1403,7 +1472,8 @@ function updateABUI() {
   $("#abStatus").textContent = status;
   // 高亮 Transcript 中与 AB 区间相交的句子
   $$(".t-line").forEach((el) => {
-    const st = parseFloat(el.dataset.start), en = parseFloat(el.dataset.end);
+    const off = syncOffset();
+    const st = parseFloat(el.dataset.start) + off, en = parseFloat(el.dataset.end) + off;
     const hit = abx.a !== null && abx.b !== null && st <= abx.b && en >= abx.a;
     el.classList.toggle("ab-range", hit);
   });
@@ -1521,8 +1591,9 @@ function repeatFromLine(lineEl) {
     repeatFromSelection();
     return;
   }
-  state.ab.a = seg.start;
-  state.ab.b = Math.max(seg.end, seg.start + 0.2);
+  const sa = toMediaTime(seg.start), sb = toMediaTime(seg.end);
+  state.ab.a = sa;
+  state.ab.b = Math.max(sb, sa + 0.2);
   startABLoop((seg.text || "").trim().slice(0, 20));
 }
 
@@ -1554,6 +1625,7 @@ function init() {
   updatePlayUI();
   $("#abCount").value = String(settings.repeatCount);
   $("#selCount").value = String(settings.repeatCount);
+  renderOffsetUI();
   updateABUI();
 
   // 加载视频
