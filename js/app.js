@@ -66,6 +66,7 @@ const state = {
   loadedVideo: false,
   ab: { a: null, b: null, count: 3, remaining: 0, active: false, label: "" },
   sel: null, // Transcript 中选中的内容 { startSeg, endSeg, startOff, endOff, text, lines }
+  spkFilter: { enabled: false, selected: {} }, // 发言人筛选：enabled=仅播放选中发言人
 };
 
 const settings = {
@@ -104,6 +105,10 @@ const videoEmpty = $("#videoEmpty");
 const videoError = $("#videoError");
 const videoOverlay = $("#videoOverlay");
 const transcriptList = $("#transcriptList");
+const spkBar = $("#spkBar");
+const spkChips = $("#spkChips");
+const spkFilterToggle = $("#spkFilterToggle");
+const spkSummary = $("#spkSummary");
 
 
 const progress = $("#progress");
@@ -286,6 +291,7 @@ function loadConfig() {
   state.blocks = norm.blocks;
   state.blockOfSeg = norm.blockOfSeg;
   state.activeIdx = -1;
+  initSpeakerFilter();
 }
 
 /* ---------- 渲染 ---------- */
@@ -310,9 +316,16 @@ function highlightText(text) {
 
 function renderTranscript() {
   clearSelection(true);
-  const blocks = state.blocks;
+  const blocks = state.spkFilter.enabled
+    ? state.blocks.filter((b) => !!state.spkFilter.selected[b.speaker])
+    : state.blocks;
   if (!state.segments.length) {
     transcriptList.innerHTML = `<div class="t-empty">暂无 Transcript 数据<br>可拖入 JSON / VTT / SRT 文件，或在设置中导入</div>`;
+    return;
+  }
+  if (state.spkFilter.enabled && !blocks.length) {
+    transcriptList.innerHTML = `<div class="t-empty">已开启“仅播放选中发言人”，但未选中任何发言人<br>请在上方勾选至少一位发言人</div>`;
+    updateTranscriptFooter();
     return;
   }
 
@@ -372,12 +385,132 @@ function updateMeta() {
 
 function updateTranscriptFooter() {
   if (!state.segments.length) { $("#transcriptFooter").innerHTML = ""; return; }
+  let blockCount = state.blocks.length;
+  let segCount = state.segments.length;
+  if (state.spkFilter.enabled) {
+    blockCount = state.blocks.filter((b) => !!state.spkFilter.selected[b.speaker]).length;
+    segCount = state.segments.filter((s) => !!state.spkFilter.selected[s.speaker]).length;
+  }
   const lastEnd = state.segments[state.segments.length - 1].end;
   const min = Math.max(1, Math.round(lastEnd / 60));
   $("#transcriptFooter").innerHTML = `
-    <span>共 ${state.blocks.length} 条发言 · ${state.segments.length} 句 · 约 ${min} 分钟</span>
+    <span>共 ${blockCount} 条发言 · ${segCount} 句 · 约 ${min} 分钟</span>
     <span class="hint">空格 播放/暂停 · ←/→ 快退/快进</span>`;
-}/* ---------- 播放器控制 ---------- */
+}/* ---------- 发言人筛选（仅播放选中发言人的内容） ---------- */
+function speakerSegCount(id) {
+  return state.segments.filter((s) => s.speaker === id).length;
+}
+
+function initSpeakerFilter() {
+  const selected = {};
+  state.speakerOrder.forEach((id) => { selected[id] = true; });
+  state.spkFilter = { enabled: false, selected };
+  renderSpeakerBar();
+}
+
+function renderSpeakerBar() {
+  if (!spkBar) return;
+  const ids = state.speakerOrder.filter((id) => speakerSegCount(id) > 0);
+  if (!ids.length) { spkBar.hidden = true; return; }
+  spkBar.hidden = false;
+  spkBar.classList.toggle("off", !state.spkFilter.enabled);
+  spkFilterToggle.checked = state.spkFilter.enabled;
+  const chosen = ids.filter((id) => !!state.spkFilter.selected[id]).length;
+  spkSummary.textContent = state.spkFilter.enabled
+    ? `已选 ${chosen}/${ids.length} 位发言人`
+    : "未启用（全部播放）";
+  spkChips.innerHTML = ids.map((id) => {
+    const sp = speakerOf(id);
+    const on = !!state.spkFilter.selected[id];
+    const initial = (sp.name || "?").trim().charAt(0) || "?";
+    const n = speakerSegCount(id);
+    return `<button type="button" class="spk-chip${on ? " on" : ""}" data-spk="${esc(id)}" title="${esc(sp.name)}（${n} 句）">
+      <span class="spk-box">${on ? "✓" : ""}</span>
+      <span class="spk-dot" style="background:${esc(sp.color)}">${esc(initial)}</span>
+      <span class="spk-name">${esc(sp.name)}</span>
+      <span class="spk-count">${n}</span>
+    </button>`;
+  }).join("");
+}
+
+function applySpeakerFilterChange() {
+  renderSpeakerBar();
+  computeMatches();
+  renderTranscript();
+  updateSearchUI();
+  if (state.spkFilter.enabled) startFilterTick();
+  else stopFilterTick();
+  if (state.loadedVideo) {
+    if (state.spkFilter.enabled && !video.paused) enforceSpeakerFilter(video.currentTime);
+    syncTranscript(video.currentTime);
+  }
+}
+
+function setSpeakerSelected(id, on) {
+  state.spkFilter.selected[id] = on;
+  state.spkFilter.enabled = true; // 勾选即启用筛选
+  applySpeakerFilterChange();
+}
+
+function setAllSpeakers(on) {
+  state.speakerOrder.forEach((id) => { state.spkFilter.selected[id] = on; });
+  state.spkFilter.enabled = true;
+  applySpeakerFilterChange();
+}
+
+/* 播放中跳过未选中发言人的内容 */
+function enforceSpeakerFilter(t) {
+  const f = state.spkFilter;
+  if (!f.enabled || state.ab.active) return; // AB 复读进行时以 AB 为准
+  const segs = state.segments;
+  if (!segs.length) return;
+  const idx = findActiveIndex(t);
+  if (idx < 0) return;
+  const cur = segs[idx];
+  if (f.selected[cur.speaker]) return;
+  let next = -1;
+  for (let i = idx + 1; i < segs.length; i++) {
+    if (f.selected[segs[i].speaker]) { next = i; break; }
+  }
+  if (next >= 0) {
+    const target = segs[next].start;
+    if (Math.abs((video.currentTime || 0) - target) > 0.15) seekTo(target);
+  } else if (!video.paused) {
+    video.pause();
+    if (!enforceSpeakerFilter._warnTs || Date.now() - enforceSpeakerFilter._warnTs > 3000) {
+      enforceSpeakerFilter._warnTs = Date.now();
+      toast("已跳过未选发言人的内容，后面没有可播放内容");
+    }
+  }
+}
+
+/* 后台标签页兜底：筛选跳转同样挂在独立定时器上 */
+let filterTick = null;
+function startFilterTick() {
+  stopFilterTick();
+  filterTick = setInterval(() => {
+    if (video.paused || video.ended) return;
+    if (state.spkFilter.enabled) enforceSpeakerFilter(video.currentTime);
+  }, 200);
+}
+function stopFilterTick() {
+  if (filterTick) { clearInterval(filterTick); filterTick = null; }
+}
+
+spkFilterToggle.addEventListener("change", (e) => {
+  state.spkFilter.enabled = e.target.checked;
+  applySpeakerFilterChange();
+});
+spkBar.addEventListener("click", (e) => {
+  const chip = e.target.closest(".spk-chip");
+  if (!chip) return;
+  const id = chip.dataset.spk;
+  if (!id) return;
+  setSpeakerSelected(id, !state.spkFilter.selected[id]);
+});
+$("#spkAll").addEventListener("click", () => setAllSpeakers(true));
+$("#spkNone").addEventListener("click", () => setAllSpeakers(false));
+/* ---------- 播放器控制 ---------- */
 function togglePlay() {
   if (!state.loadedVideo) return;
   if (video.paused) {
@@ -553,11 +686,13 @@ video.addEventListener("timeupdate", () => {
   updateProgressUI();
   // 循环边界检测挂在媒体时钟事件上：页面在后台（rAF 暂停）时仍会触发
   if (state.ab.active) checkAB(video.currentTime);
+  if (state.spkFilter.enabled) enforceSpeakerFilter(video.currentTime);
   syncTranscript(video.currentTime);
 });
 video.addEventListener("play", () => {
   updatePlayUI();
   if (!state.duration) { state.duration = video.duration; updateMeta(); }
+  if (state.spkFilter.enabled) enforceSpeakerFilter(video.currentTime);
   rAF();
 });
 video.addEventListener("pause", updatePlayUI);
@@ -586,6 +721,7 @@ function rAF() {
     if (!video.paused && !video.ended) {
       updateProgressUI();
       if (state.ab.active) checkAB(video.currentTime);
+      if (state.spkFilter.enabled) enforceSpeakerFilter(video.currentTime);
       rafId = requestAnimationFrame(loop);
     } else {
       updateProgressUI();
@@ -839,6 +975,7 @@ function computeMatches() {
   if (!q) { state.matches = []; state.matchCursor = -1; return; }
   state.matches = [];
   state.segments.forEach((s, i) => {
+    if (state.spkFilter.enabled && !state.spkFilter.selected[s.speaker]) return;
     if (s.text.toLowerCase().includes(q) || speakerOf(s.speaker).name.toLowerCase().includes(q)) {
       state.matches.push(i);
     }
@@ -1069,6 +1206,7 @@ function applyTranscriptData(data) {
   state.speakers = norm.speakers;
   state.speakerOrder = norm.speakerOrder;
   state.activeIdx = -1;
+  initSpeakerFilter();
   computeMatches();
   renderTranscript();
   if (state.loadedVideo) syncTranscript(video.currentTime);

@@ -632,3 +632,68 @@ button:focus-visible, input:focus-visible, .video-shell:focus-visible {
   .meeting-meta { display: none; }
   .topbar-right .btn-primary { padding: 0 10px; }
 }
+/* ---------- 发言人筛选 ---------- */
+.spk-bar {
+  flex: 0 0 auto;
+  margin: 0 16px 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+.spk-bar-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.spk-bar-title { font-size: 12px; font-weight: 600; color: var(--text-2); flex: 0 0 auto; }
+.spk-master {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text); cursor: pointer; user-select: none;
+}
+.spk-master input { display: none; }
+.spk-master .switch { width: 32px; height: 18px; }
+.spk-master .switch::after { width: 14px; height: 14px; top: 2px; left: 2px; }
+.spk-master input:checked + .switch { background: var(--accent); }
+.spk-master input:checked + .switch::after { left: 16px; }
+.spk-summary { font-size: 11px; color: var(--text-3); }
+.spk-actions { display: inline-flex; gap: 6px; margin-left: auto; }
+.spk-mini {
+  height: 22px; padding: 0 8px;
+  font-size: 11px; line-height: 1;
+  border: 1px solid var(--border-strong); border-radius: 4px;
+  background: var(--surface); color: var(--text-2);
+}
+.spk-mini:hover { background: var(--accent-soft); color: var(--accent-dark); border-color: var(--accent); }
+
+.spk-chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+  max-height: 104px;
+  overflow-y: auto;
+  transition: opacity .15s;
+}
+.spk-bar.off .spk-chips { opacity: .55; }
+.spk-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 10px 0 6px;
+  border: 1px solid var(--border); border-radius: 14px;
+  background: var(--surface); color: var(--text-2);
+  font-size: 12px; white-space: nowrap;
+  transition: all .15s;
+}
+.spk-chip:hover { border-color: var(--accent); color: var(--accent-dark); }
+.spk-chip .spk-box {
+  width: 14px; height: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--border-strong); border-radius: 3px;
+  font-size: 10px; line-height: 1; color: #fff;
+  flex: 0 0 auto;
+}
+.spk-chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+.spk-chip.on .spk-box { background: var(--accent); border-color: var(--accent); }
+.spk-chip .spk-dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 10px; font-weight: 600;
+  flex: 0 0 auto;
+}
+.spk-chip .spk-count { font-size: 10px; color: var(--text-3); }
+.spk-chip.on .spk-count { color: var(--accent-dark); }
+[data-theme="dark"] .spk-chip.on { background: rgba(139, 140, 199, .22); }

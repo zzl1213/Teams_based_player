@@ -193,6 +193,24 @@
         </div>
       </div>
 
+      <!-- ======= 发言人筛选 ======= -->
+      <div class="spk-bar" id="spkBar" hidden>
+        <div class="spk-bar-head">
+          <span class="spk-bar-title">发言人</span>
+          <label class="spk-master" title="开启后只播放被勾选发言人的内容">
+            <input type="checkbox" id="spkFilterToggle" />
+            <i class="switch"></i>
+            <span>仅播放选中发言人</span>
+          </label>
+          <span class="spk-summary" id="spkSummary"></span>
+          <span class="spk-actions">
+            <button type="button" class="spk-mini" id="spkAll">全选</button>
+            <button type="button" class="spk-mini" id="spkNone">全不选</button>
+          </span>
+        </div>
+        <div class="spk-chips" id="spkChips"></div>
+      </div>
+
       <div class="t-list" id="transcriptList"></div>
 
       <!-- 选区复读操作条（选中多句或单词后浮现） -->
