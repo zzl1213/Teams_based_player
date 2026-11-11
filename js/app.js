@@ -317,14 +317,14 @@ function highlightText(text) {
 
 function renderTranscript() {
   clearSelection(true);
-  const blocks = state.spkFilter.enabled
-    ? state.blocks.filter((b) => !!state.spkFilter.selected[b.speaker])
-    : state.blocks;
   if (!state.segments.length) {
     transcriptList.innerHTML = `<div class="t-empty">暂无 Transcript 数据<br>可拖入 JSON / VTT / SRT 文件，或在设置中导入</div>`;
     return;
   }
-  if (state.spkFilter.enabled && !blocks.length) {
+  const visibleBlocks = state.spkFilter.enabled
+    ? state.blocks.filter((bk) => !!state.spkFilter.selected[bk.speaker])
+    : state.blocks;
+  if (!visibleBlocks.length) {
     transcriptList.innerHTML = `<div class="t-empty">已开启“仅播放选中发言人”，但未选中任何发言人<br>请在上方勾选至少一位发言人</div>`;
     updateTranscriptFooter();
     return;
@@ -332,7 +332,9 @@ function renderTranscript() {
 
   let html = "";
   let lastChapter = -1;
-  blocks.forEach((block, b) => {
+  // 始终遍历原始 blocks 并保留原始索引 b，保证块级高亮/自动滚动能正确定位
+  state.blocks.forEach((block, b) => {
+    if (state.spkFilter.enabled && !state.spkFilter.selected[block.speaker]) return;
     const ci = chapterIndexOf(block.start);
     if (ci >= 0 && ci !== lastChapter) {
       const ch = state.chapters[ci];
@@ -410,7 +412,7 @@ function initSpeakerFilter() {
 }
 
 function renderSpeakerBar() {
-  if (!spkBar) return;
+  if (!spkBar || !spkChips || !spkFilterToggle || !spkSummary) return;
   const ids = state.speakerOrder.filter((id) => speakerSegCount(id) > 0);
   if (!ids.length) { spkBar.hidden = true; return; }
   spkBar.hidden = false;
@@ -506,19 +508,25 @@ function stopFilterTick() {
   if (filterTick) { clearInterval(filterTick); filterTick = null; }
 }
 
-spkFilterToggle.addEventListener("change", (e) => {
-  state.spkFilter.enabled = e.target.checked;
-  applySpeakerFilterChange();
-});
-spkBar.addEventListener("click", (e) => {
-  const chip = e.target.closest(".spk-chip");
-  if (!chip) return;
-  const id = chip.dataset.spk;
-  if (!id) return;
-  setSpeakerSelected(id, !state.spkFilter.selected[id]);
-});
-$("#spkAll").addEventListener("click", () => setAllSpeakers(true));
-$("#spkNone").addEventListener("click", () => setAllSpeakers(false));
+if (spkFilterToggle) {
+  spkFilterToggle.addEventListener("change", (e) => {
+    state.spkFilter.enabled = e.target.checked;
+    applySpeakerFilterChange();
+  });
+}
+if (spkBar) {
+  spkBar.addEventListener("click", (e) => {
+    const chip = e.target.closest(".spk-chip");
+    if (!chip) return;
+    const id = chip.dataset.spk;
+    if (!id) return;
+    setSpeakerSelected(id, !state.spkFilter.selected[id]);
+  });
+}
+const spkAllBtn = $("#spkAll");
+const spkNoneBtn = $("#spkNone");
+if (spkAllBtn) spkAllBtn.addEventListener("click", () => setAllSpeakers(true));
+if (spkNoneBtn) spkNoneBtn.addEventListener("click", () => setAllSpeakers(false));
 
 /* 同步偏移微调：解决字幕/高亮与实际语音对不齐 */
 function renderOffsetUI() {
@@ -527,6 +535,29 @@ function renderOffsetUI() {
   const v = Number(settings.timeOffset) || 0;
   el.textContent = (v > 0 ? "+" : "") + v.toFixed(1) + "s";
 }
+/* 检测 Transcript 时间轴是否超出视频时长（常见于录像与字幕不配套） */
+function checkTimelineMismatch() {
+  const el = $("#timelineWarn");
+  if (!el) return;
+  if (!state.loadedVideo || !state.segments.length || !isFinite(video.duration) || !video.duration) {
+    el.hidden = true;
+    return;
+  }
+  const off = syncOffset();
+  const firstStart = state.segments[0].start + off;
+  const lastEnd = state.segments[state.segments.length - 1].end + off;
+  const dur = video.duration;
+  if (lastEnd > dur + 5) {
+    el.hidden = false;
+    el.textContent = `⚠ Transcript 时间轴到 ${fmtClockP(lastEnd)}，超出视频时长 ${fmtClockP(dur)}，两者可能不配套（请加载对应的会议录像）；若只是整体偏移，用「对齐首句」或同步偏移校正`;
+  } else if (firstStart > dur - 1) {
+    el.hidden = false;
+    el.textContent = `⚠ 第一句字幕在 ${fmtClockP(firstStart)}，已超出视频时长 ${fmtClockP(dur)}，用「对齐首句」或同步偏移校正`;
+  } else {
+    el.hidden = true;
+  }
+}
+
 function refreshSyncAfterOffset() {
   state.activeIdx = -2; // 强制重算高亮
   if (state.loadedVideo) {
@@ -534,23 +565,42 @@ function refreshSyncAfterOffset() {
     if (state.spkFilter.enabled && !video.paused) enforceSpeakerFilter(video.currentTime);
   }
   updateABUI();
+  checkTimelineMismatch();
 }
 function adjustOffset(delta) {
   let v = Math.round(((Number(settings.timeOffset) || 0) + delta) * 10) / 10;
-  v = Math.max(-120, Math.min(120, v));
+  v = Math.max(-3600, Math.min(3600, v));
   settings.timeOffset = v;
   saveSettings();
   renderOffsetUI();
   refreshSyncAfterOffset();
 }
-$("#offsetMinus").addEventListener("click", () => adjustOffset(-0.5));
-$("#offsetPlus").addEventListener("click", () => adjustOffset(0.5));
-$("#offsetVal").addEventListener("click", () => {
+/* 把第一句字幕对齐到当前播放位置（适合整体偏移很大的情况） */
+function alignFirstSegment() {
+  if (!state.loadedVideo || !state.segments.length) {
+    toast("需要先加载视频和 Transcript");
+    return;
+  }
+  const first = state.segments[0].start;
+  settings.timeOffset = Math.round((video.currentTime - first) * 10) / 10;
+  saveSettings();
+  renderOffsetUI();
+  refreshSyncAfterOffset();
+  toast(`已按首句对齐：偏移 ${settings.timeOffset.toFixed(1)}s（可再用 ± 微调）`);
+}
+const offsetMinusBtn = $("#offsetMinus");
+const offsetPlusBtn = $("#offsetPlus");
+const offsetValBtn = $("#offsetVal");
+const offsetAlignBtn = $("#offsetAlign");
+if (offsetMinusBtn) offsetMinusBtn.addEventListener("click", (e) => adjustOffset(e.shiftKey ? -10 : -0.5));
+if (offsetPlusBtn) offsetPlusBtn.addEventListener("click", (e) => adjustOffset(e.shiftKey ? 10 : 0.5));
+if (offsetValBtn) offsetValBtn.addEventListener("click", () => {
   settings.timeOffset = 0;
   saveSettings();
   renderOffsetUI();
   refreshSyncAfterOffset();
 });
+if (offsetAlignBtn) offsetAlignBtn.addEventListener("click", alignFirstSegment);
 /* ---------- 播放器控制 ---------- */
 function togglePlay() {
   if (!state.loadedVideo) return;
@@ -720,6 +770,7 @@ video.addEventListener("loadedmetadata", () => {
   updateMeta();
   updateProgressUI();
   updateBufferedUI();
+  checkTimelineMismatch();
 });
 video.addEventListener("durationchange", () => { updateProgressUI(); updateBufferedUI(); });
 video.addEventListener("progress", updateBufferedUI);
@@ -1249,16 +1300,16 @@ function importTranscriptFile(file) {
   reader.readAsText(file);
 }
 
-function restoreImportedTranscript() {
+function restoreImportedTranscript(silent) {
   try {
     const raw = localStorage.getItem(IMPORT_KEY);
-    if (!raw) { toast("没有找到上次导入的 Transcript"); return; }
+    if (!raw) { if (!silent) toast("没有找到上次导入的 Transcript"); return; }
     const stored = JSON.parse(raw);
     const data = parseTranscriptText(stored.text, stored.name || "");
     applyTranscriptData(data);
-    toast(`已恢复上次导入（${state.segments.length} 句 / ${state.blocks.length} 条发言）`);
+    if (!silent) toast(`已恢复上次导入（${state.segments.length} 句 / ${state.blocks.length} 条发言）`);
   } catch (e) {
-    toast("恢复失败");
+    if (!silent) toast("恢复失败");
   }
 }
 
@@ -1278,6 +1329,7 @@ function applyTranscriptData(data) {
   initSpeakerFilter();
   computeMatches();
   renderTranscript();
+  checkTimelineMismatch();
   if (state.loadedVideo) syncTranscript(video.currentTime);
 }
 
@@ -1620,6 +1672,12 @@ function init() {
   loadSettings();
   loadConfig();
   applySettings();
+  // 若配置中没有逐字稿，自动恢复上次导入的内容（避免每次刷新都要手动恢复）
+  if (!state.segments.length) {
+    try {
+      if (localStorage.getItem(IMPORT_KEY)) restoreImportedTranscript(true);
+    } catch (e) { /* ignore */ }
+  }
   renderTranscript();
   updateMeta();
   updatePlayUI();
@@ -1643,4 +1701,9 @@ $("#btnLoadSample").addEventListener("click", generateSampleVideo);
 $("#cfgGenSample").addEventListener("click", generateSampleVideo);
 $("#btnGenError").addEventListener("click", generateSampleVideo);
 
-init();
+try {
+  init();
+} catch (err) {
+  console.error("[app] init failed:", err);
+  try { toast("页面初始化异常，请强制刷新（Ctrl+F5）"); } catch (e) {}
+}

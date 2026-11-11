@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
   <title>会议回放 · Transcript Player</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20261111b" />
 </head>
 <body>
   <!-- ======= 顶部栏 ======= -->
@@ -208,13 +210,15 @@
             <button type="button" class="spk-mini" id="spkNone">全不选</button>
           </span>
         </div>
+        <div class="spk-warn" id="timelineWarn" hidden></div>
         <div class="spk-chips" id="spkChips"></div>
         <div class="spk-sync">
           <span class="spk-sync-label">同步偏移</span>
-          <button type="button" class="spk-mini" id="offsetMinus" title="字幕/高亮提前 0.5 秒">−0.5s</button>
+          <button type="button" class="spk-mini" id="offsetMinus" title="字幕/高亮提前 0.5 秒（按住 Shift 为 10 秒）">−0.5s</button>
           <button type="button" class="spk-mini spk-offset-val" id="offsetVal" title="点击复位为 0">0.0s</button>
-          <button type="button" class="spk-mini" id="offsetPlus" title="字幕/高亮延后 0.5 秒">+0.5s</button>
-          <span class="spk-sync-hint">若高亮/跳过与语音不同步，用这里微调（点击中间数值复位）</span>
+          <button type="button" class="spk-mini" id="offsetPlus" title="字幕/高亮延后 0.5 秒（按住 Shift 为 10 秒）">+0.5s</button>
+          <button type="button" class="spk-mini spk-align" id="offsetAlign" title="把第一句字幕对齐到当前播放位置（适合整体偏移很大的情况）">对齐首句</button>
+          <span class="spk-sync-hint">高亮与语音不同步时：播放到第一句开始处点「对齐首句」，或用 ± 微调（点击中间数值复位）</span>
         </div>
       </div>
 
@@ -289,7 +293,7 @@
   <input type="file" id="fileVideo" accept="video/*,.mkv" hidden />
   <input type="file" id="fileTranscript" accept=".json,.vtt,.srt,.txt" hidden />
 
-  <script src="data/config.js"></script>
-  <script src="js/app.js"></script>
+  <script src="data/config.js?v=20261111b"></script>
+  <script src="js/app.js?v=20261111b"></script>
 </body>
 </html>

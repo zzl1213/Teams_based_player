@@ -33,7 +33,7 @@ http.createServer((req, res) => {
       'Accept-Ranges': 'bytes',
       'Content-Length': end - start + 1,
       'Content-Type': type,
-      'Cache-Control': 'no-cache'
+      'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0'
     });
     fs.createReadStream(fp, { start, end }).pipe(res);
     return;
@@ -42,7 +42,7 @@ http.createServer((req, res) => {
     'Content-Length': total,
     'Accept-Ranges': 'bytes',
     'Content-Type': type,
-    'Cache-Control': 'no-cache'
+    'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0'
   });
   fs.createReadStream(fp).pipe(res);
 }).listen(port, '127.0.0.1', () => console.log('serving on http://127.0.0.1:' + port));
